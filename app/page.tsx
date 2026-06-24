@@ -13,7 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head> <title>Healthy Paw</title>
+      <head> <title>Heealthy Paw</title>
 </head>      <body>{children}</body>
     </html>
   );
