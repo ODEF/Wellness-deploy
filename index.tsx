@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body><h1>Healthy Paw</h1><p>Webbsite is working on Vercel.</p></body>
     </html>
     )
   }
