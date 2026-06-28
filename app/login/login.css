@@ -8,7 +8,7 @@
 
 .loginCard {
   width: 100%;
-  max-width: 420px;
+  max-width: 430px;
   background: #ffffff;
   border: 1px solid rgba(92, 61, 46, 0.12);
   border-radius: 24px;
@@ -35,10 +35,15 @@
   line-height: 1.6;
 }
 
-.loginForm {
+.loginForm,
+.loginSecondaryForm {
   display: grid;
   gap: 16px;
   margin-top: 24px;
+}
+
+.loginSecondaryForm {
+  margin-top: 12px;
 }
 
 .loginForm label {
@@ -57,7 +62,8 @@
   font-size: 15px;
 }
 
-.loginForm button {
+.loginForm button,
+.loginSecondaryForm button {
   height: 46px;
   border: none;
   border-radius: 999px;
@@ -67,6 +73,25 @@
   cursor: pointer;
 }
 
+.loginSecondaryForm button {
+  background: transparent;
+  color: #5c3d2e;
+  border: 1px solid rgba(92, 61, 46, 0.2);
+}
+
 .loginForm button:hover {
   background: #3b2a22;
+}
+
+.loginSecondaryForm button:hover {
+  background: rgba(92, 61, 46, 0.06);
+}
+
+.loginError {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fff0f0;
+  color: #9d2929;
+  font-size: 14px;
 }

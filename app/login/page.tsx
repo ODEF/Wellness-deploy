@@ -1,54 +1,179 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../../lib/supabase/server";
+import { createAdminClient } from "../../lib/supabase/admin";
 import "./login.css";
 
-async function login(formData: FormData) {
+function getAdminEmails() {
+  return (process.env.ADMIN_EMAILS || "")
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+function isAllowedAdminEmail(email: string) {
+  return getAdminEmails().includes(email.trim().toLowerCase());
+}
+
+async function sendAdminCode(formData: FormData) {
   "use server";
 
   const supabase = await createClient();
 
-  const email = String(formData.get("email") || "");
-  const password = String(formData.get("password") || "");
+  const email = String(formData.get("email") || "")
+    .trim()
+    .toLowerCase();
 
-  if (!email || !password) {
-    redirect("/login");
+  if (!email) {
+    redirect("/login?error=missing_email");
   }
 
-  const { error } = await supabase.auth.signInWithPassword({
+  if (!isAllowedAdminEmail(email)) {
+    redirect("/login?error=not_admin");
+  }
+
+  const { error } = await supabase.auth.signInWithOtp({
     email,
-    password,
+    options: {
+      shouldCreateUser: true,
+    },
   });
 
   if (error) {
-    redirect("/login?error=1");
+    redirect("/login?error=send_failed");
   }
+
+  redirect(`/login?sent=1&email=${encodeURIComponent(email)}`);
+}
+
+async function verifyAdminCode(formData: FormData) {
+  "use server";
+
+  const supabase = await createClient();
+
+  const email = String(formData.get("email") || "")
+    .trim()
+    .toLowerCase();
+
+  const token = String(formData.get("token") || "").trim();
+
+  if (!email || !token) {
+    redirect("/login?error=missing_code");
+  }
+
+  if (!isAllowedAdminEmail(email)) {
+    redirect("/login?error=not_admin");
+  }
+
+  const { data, error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: "email",
+  });
+
+  if (error || !data.user) {
+    redirect(`/login?sent=1&email=${encodeURIComponent(email)}&error=invalid_code`);
+  }
+
+  const adminSupabase = createAdminClient();
+
+  await adminSupabase.from("profiles").upsert(
+    {
+      id: data.user.id,
+      role: "admin",
+    },
+    {
+      onConflict: "id",
+    }
+  );
 
   redirect("/admin");
 }
 
-export default async function LoginPage() {
+type LoginPageProps = {
+  searchParams: Promise<{
+    sent?: string;
+    email?: string;
+    error?: string;
+  }>;
+};
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const params = await searchParams;
+
+  const sent = params.sent === "1";
+  const email = params.email || "";
+  const error = params.error || "";
+
   return (
     <main className="loginPage">
       <section className="loginCard">
         <p className="loginEyebrow">Admin Login</p>
-        <h1>Sign in</h1>
-        <p className="loginText">
-          Use your admin account to access the website management panel.
-        </p>
 
-        <form action={login} className="loginForm">
-          <label>
-            Email
-            <input name="email" type="email" required />
-          </label>
+        {!sent ? (
+          <>
+            <h1>Enter your email</h1>
+            <p className="loginText">
+              We will send a one-time admin login code to your email.
+            </p>
 
-          <label>
-            Password
-            <input name="password" type="password" required />
-          </label>
+            {error === "not_admin" && (
+              <p className="loginError">This email is not allowed for admin access.</p>
+            )}
 
-          <button type="submit">Login</button>
-        </form>
+            {error === "send_failed" && (
+              <p className="loginError">Could not send the code. Try again.</p>
+            )}
+
+            {error === "missing_email" && (
+              <p className="loginError">Please enter your email.</p>
+            )}
+
+            <form action={sendAdminCode} className="loginForm">
+              <label>
+                Email
+                <input name="email" type="email" required />
+              </label>
+
+              <button type="submit">Send Code</button>
+            </form>
+          </>
+        ) : (
+          <>
+            <h1>Enter code</h1>
+            <p className="loginText">
+              A one-time code was sent to <strong>{email}</strong>.
+            </p>
+
+            {error === "invalid_code" && (
+              <p className="loginError">Invalid or expired code.</p>
+            )}
+
+            {error === "missing_code" && (
+              <p className="loginError">Please enter the code.</p>
+            )}
+
+            <form action={verifyAdminCode} className="loginForm">
+              <input type="hidden" name="email" value={email} />
+
+              <label>
+                Code
+                <input
+                  name="token"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  required
+                />
+              </label>
+
+              <button type="submit">Open Admin Panel</button>
+            </form>
+
+            <form action={sendAdminCode} className="loginSecondaryForm">
+              <input type="hidden" name="email" value={email} />
+              <button type="submit">Send New Code</button>
+            </form>
+          </>
+        )}
       </section>
     </main>
   );
