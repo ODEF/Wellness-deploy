@@ -1,55 +1,49 @@
-import React from "react";
+import Link from "next/link";
+import styles from "./footer.module.css";
 
-import styles from "./Footer.module.css";
-import Image from "next/image";
+const NAV_LINKS = [
+  { label: "Home", href: "/" },
+  { label: "Hotels", href: "/hotels" },
+  { label: "Services", href: "/services" },
+  { label: "Contact", href: "/contact" },
+];
 
 export default function Footer() {
   return (
-    <footer className="flex w-full flex-row flex-wrap items-center justify-center gap-y-6 gap-x-12 border-t border-blue-gray-50 py-6 text-center md:justify-between">
-        
-        {/* 
-        *
-        *------------------------------------ RIGHT ------------------------------------
-        * 
-        */}
+    <footer className={styles.footer}>
+      <div className={styles.inner}>
+        <div className={styles.brand}>
+          <div className={styles.iconCircle}>
+            <svg
+              className={styles.heartIcon}
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path d="M12 21s-7.2-4.6-9.6-9.2C.4 8 .9 4.6 3.5 3.1 5.7 1.8 8.4 2.4 10 4.3L12 6.6l2-2.3c1.6-1.9 4.3-2.5 6.5-1.2 2.6 1.5 3.1 4.9 1.1 8.7C19.2 16.4 12 21 12 21z" />
+            </svg>
+          </div>
 
-        <div className="right flex w-full flex-col items-center gap-y-6 md:flex-row md:justify-between md:gap-y-0">
-                    <Image
-            src="/assets/wellness-logo.jpeg"
-            alt="Healthy Paw Logo"
-            width={80}
-            height={80}
-            className="h-12 w-auto rounded-full object-cover"
-          />
-
-          <p className="text-sm text-blue-gray-500">
-            &copy; 2024 Healthy Paw. All rights reserved.
-          </p>
-        </div>
-        
-        {/* 
-        *
-        *------------------------------------ Middle ------------------------------------
-        * 
-        */}
-
-        <div className="center flex w-full flex-col items-center gap-y-6 md:flex-row md:justify-between md:gap-y-0">
-          <p className="text-sm text-blue-gray-500">
-            <a href="/contact" className="text-blue-gray-500 hover:text-blue-gray-700">Contact Us</a> | <a href="/about" className="text-blue-gray-500 hover:text-blue-gray-700">About Us</a>
-          </p>
+          <span className={styles.brandName}>Healthy Paw</span>
         </div>
 
-        {/* 
-        *
-        *------------------------------------ LEFT ------------------------------------
-        * 
-        */}
-        <div className="left flex w-full flex-col items-center gap-y-6 md:flex-row md:justify-between md:gap-y-0">
-          <p className="text-sm text-blue-gray-500">
-            <a href="/privacy-policy" className="text-blue-gray-500 hover:text-blue-gray-700">  
-Privacy Policy</a> | <a href="/terms-of-service" className="text-blue-gray-500 hover:text-blue-gray-700">Terms of Service</a>
-            </p>
-        </div>
+        <nav className={styles.nav}>
+          {NAV_LINKS.map((link) => (
+            <Link key={link.label} href={link.href} className={styles.navLink}>
+              {link.label}
+            </Link>
+          ))}
+
+          <Link href="/privacy-policy" className={styles.navLink}>
+            Privacy
+          </Link>
+
+          <Link href="/terms-of-service" className={styles.navLink}>
+            Terms
+          </Link>
+        </nav>
+
+        <p className={styles.copy}>© 2025 Healthy Paw.</p>
+      </div>
     </footer>
   );
 }

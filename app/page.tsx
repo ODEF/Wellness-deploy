@@ -1,9 +1,11 @@
 import react from "react";
 import Link from "next/link";
 import Footer from "@/components/layout/Footer"
+import Header from "@/components/layout/Navbar"
 export default function HomePage() {
   return (
-    <main style={{ padding: "40px" }}>
+    <main >
+      <Header/>
       <h1>Healthy Paw</h1>
       <p>Website is running.</p>
       
