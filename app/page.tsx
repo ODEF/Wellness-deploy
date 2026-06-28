@@ -1,7 +1,7 @@
 import react from "react";
 import Link from "next/link";
 import Footer from "@/components/layout/Footer"
-import Header from "@/components/layout/Navbar""
+import Header from "@/components/layout/Navbar"
 export default function HomePage() {
   return (
     <main >
