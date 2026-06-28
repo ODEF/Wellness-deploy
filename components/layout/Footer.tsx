@@ -14,7 +14,14 @@ export default function Footer() {
         */}
 
         <div className="right flex w-full flex-col items-center gap-y-6 md:flex-row md:justify-between md:gap-y-0">
-          <Image src="/assets/wellness-logo.jpeg" alt="Healthy Paw Logo" className="h-12 w-auto" />
+                    <Image
+            src="/assets/wellness-logo.jpeg"
+            alt="Healthy Paw Logo"
+            width={80}
+            height={80}
+            className="h-12 w-auto rounded-full object-cover"
+          />
+
           <p className="text-sm text-blue-gray-500">
             &copy; 2024 Healthy Paw. All rights reserved.
           </p>
