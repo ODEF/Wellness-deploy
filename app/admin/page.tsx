@@ -1,8 +1,12 @@
-export default function AdminPage() {
+import { getFeaturesContent } from "../../lib/features/getFeaturesContent";
+import FeaturesEditor from "../../components/admin/FeaturesEditor";
+
+export default async function AdminFeaturesPage() {
+  const content = await getFeaturesContent();
+
   return (
     <main>
-      <h1>Admin Panel</h1>
-      <p>Admin content management will be here.</p>
+      <FeaturesEditor initialContent={content} />
     </main>
   );
 }
