@@ -1,8 +1,6 @@
-"use client";
-
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabaseAdmin } from "../../lib/supabase/client";
+import { createClient } from "../../lib/supabase/client";
 import styles from "./LoginForm.module.css";
 
 type AuthMode = "login" | "register";
