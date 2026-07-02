@@ -6,19 +6,23 @@ import Packages from "../components/home/Packages";
 import OtherServices from "../components/home/OtherServices";
 import Testimonials from "../components/home/Testimonials";
 import FinalCta from "../components/home/FinalCTA";
-import { homeContent } from "../lib/home/homeContent";
+import { getHomeContent } from "../lib/home/getHomeContent";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const content = await getHomeContent();
+
   return (
     <main>
-      <Hero hero={homeContent.hero} />
-      <Features features={homeContent.features} />
-      <Services services={homeContent.services} />
-      <Grooming grooming={homeContent.grooming} />
-      <Packages packages={homeContent.packages} />
-      <OtherServices otherServices={homeContent.otherServices} />
-      <Testimonials testimonials={homeContent.testimonials} />
-      <FinalCta finalCta={homeContent.finalCta} />
+      <Hero hero={content.hero} />
+      <Features features={content.features} />
+      <Services services={content.services} />
+      <Grooming grooming={content.grooming} />
+      <Packages packages={content.packages} />
+      <OtherServices otherServices={content.otherServices} />
+      <Testimonials testimonials={content.testimonials} />
+      <FinalCta finalCta={content.finalCta} />
     </main>
   );
 }

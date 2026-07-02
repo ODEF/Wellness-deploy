@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { homeContent, type HomeHeroContent } from "../../lib/home/homeContent";
 import styles from "./ContentEditor.module.css";
 
 const sidebarLinks = [
@@ -26,32 +27,66 @@ const sections = [
   "Final CTA",
 ];
 
-type HeroDraft = {
-  trustBadge: string;
-  titleMain: string;
-  titleHighlight: string;
-  subtitle: string;
-  primaryButtonText: string;
-  primaryButtonLink: string;
-  heroImageUrl: string;
-};
+type HeroDraft = Pick<
+  HomeHeroContent,
+  | "trustBadge"
+  | "titleMain"
+  | "titleHighlight"
+  | "subtitle"
+  | "primaryButtonText"
+  | "primaryButtonLink"
+  | "heroImageUrl"
+>;
 
 const initialHeroDraft: HeroDraft = {
-  trustBadge: "Trusted by 4,200+ families",
-  titleMain: "Personalised wellness care",
-  titleHighlight: "for your dog",
-  subtitle:
-    "Choose what your dog needs today and we will guide you to the right service — grooming, vet care, spa, hotel, training, and more.",
-  primaryButtonText: "Start Now",
-  primaryButtonLink: "#services",
-  heroImageUrl:
-    "https://images.unsplash.com/photo-1768676936784-22a5796db0fe?w=880&h=1100&fit=crop&auto=format",
+  trustBadge: homeContent.hero.trustBadge,
+  titleMain: homeContent.hero.titleMain,
+  titleHighlight: homeContent.hero.titleHighlight,
+  subtitle: homeContent.hero.subtitle,
+  primaryButtonText: homeContent.hero.primaryButtonText,
+  primaryButtonLink: homeContent.hero.primaryButtonLink,
+  heroImageUrl: homeContent.hero.heroImageUrl,
 };
 
 export default function ContentEditor() {
   const [selectedSection, setSelectedSection] = useState("Hero");
   const [heroDraft, setHeroDraft] = useState<HeroDraft>(initialHeroDraft);
-  const [status, setStatus] = useState<"Draft" | "Saved">("Draft");
+  const [status, setStatus] = useState<"Loading" | "Draft" | "Saving" | "Saved" | "Error">(
+    "Loading",
+  );
+
+  useEffect(() => {
+    async function loadContent() {
+      try {
+        const response = await fetch("/api/admin/home", {
+          cache: "no-store",
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error ?? "Failed to load content");
+        }
+
+        setHeroDraft({
+          trustBadge: result.content.hero.trustBadge,
+          titleMain: result.content.hero.titleMain,
+          titleHighlight: result.content.hero.titleHighlight,
+          subtitle: result.content.hero.subtitle,
+          primaryButtonText: result.content.hero.primaryButtonText,
+          primaryButtonLink: result.content.hero.primaryButtonLink,
+          heroImageUrl: result.content.hero.heroImageUrl,
+        });
+
+        setStatus("Saved");
+      } catch (error) {
+        console.error(error);
+        setStatus("Error");
+      }
+    }
+
+    loadContent();
+  }, []);
 
   function updateHeroField(field: keyof HeroDraft, value: string) {
     setHeroDraft((current) => ({
@@ -62,8 +97,31 @@ export default function ContentEditor() {
     setStatus("Draft");
   }
 
-  function handleSave() {
-    setStatus("Saved");
+  async function handleSave() {
+    try {
+      setStatus("Saving");
+
+      const response = await fetch("/api/admin/home", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          hero: heroDraft,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error ?? "Failed to save content");
+      }
+
+      setStatus("Saved");
+    } catch (error) {
+      console.error(error);
+      setStatus("Error");
+    }
   }
 
   function handleReset() {
@@ -110,8 +168,12 @@ export default function ContentEditor() {
               Preview Website
             </Link>
 
-            <button className={styles.primaryButton} onClick={handleSave}>
-              Save Changes
+            <button
+              className={styles.primaryButton}
+              onClick={handleSave}
+              disabled={status === "Loading" || status === "Saving"}
+            >
+              {status === "Saving" ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </header>
@@ -146,7 +208,11 @@ export default function ContentEditor() {
 
               <span
                 className={`${styles.statusBadge} ${
-                  status === "Saved" ? styles.savedBadge : ""
+                  status === "Saved"
+                    ? styles.savedBadge
+                    : status === "Error"
+                      ? styles.errorBadge
+                      : ""
                 }`}
               >
                 {status}
@@ -155,87 +221,107 @@ export default function ContentEditor() {
 
             {selectedSection === "Hero" ? (
               <>
-                <div className={styles.formGrid}>
-                  <label className={styles.field}>
-                    <span>Trust badge</span>
-                    <input
-                      value={heroDraft.trustBadge}
-                      onChange={(event) =>
-                        updateHeroField("trustBadge", event.target.value)
-                      }
-                    />
-                  </label>
+                {status === "Loading" ? (
+                  <div className={styles.loadingBox}>Loading content...</div>
+                ) : (
+                  <>
+                    <div className={styles.formGrid}>
+                      <label className={styles.field}>
+                        <span>Trust badge</span>
+                        <input
+                          value={heroDraft.trustBadge}
+                          onChange={(event) =>
+                            updateHeroField("trustBadge", event.target.value)
+                          }
+                        />
+                      </label>
 
-                  <label className={styles.field}>
-                    <span>Main title</span>
-                    <input
-                      value={heroDraft.titleMain}
-                      onChange={(event) =>
-                        updateHeroField("titleMain", event.target.value)
-                      }
-                    />
-                  </label>
+                      <label className={styles.field}>
+                        <span>Main title</span>
+                        <input
+                          value={heroDraft.titleMain}
+                          onChange={(event) =>
+                            updateHeroField("titleMain", event.target.value)
+                          }
+                        />
+                      </label>
 
-                  <label className={styles.field}>
-                    <span>Highlighted title</span>
-                    <input
-                      value={heroDraft.titleHighlight}
-                      onChange={(event) =>
-                        updateHeroField("titleHighlight", event.target.value)
-                      }
-                    />
-                  </label>
+                      <label className={styles.field}>
+                        <span>Highlighted title</span>
+                        <input
+                          value={heroDraft.titleHighlight}
+                          onChange={(event) =>
+                            updateHeroField("titleHighlight", event.target.value)
+                          }
+                        />
+                      </label>
 
-                  <label className={styles.field}>
-                    <span>Primary button text</span>
-                    <input
-                      value={heroDraft.primaryButtonText}
-                      onChange={(event) =>
-                        updateHeroField("primaryButtonText", event.target.value)
-                      }
-                    />
-                  </label>
+                      <label className={styles.field}>
+                        <span>Primary button text</span>
+                        <input
+                          value={heroDraft.primaryButtonText}
+                          onChange={(event) =>
+                            updateHeroField(
+                              "primaryButtonText",
+                              event.target.value,
+                            )
+                          }
+                        />
+                      </label>
 
-                  <label className={styles.field}>
-                    <span>Primary button link</span>
-                    <input
-                      value={heroDraft.primaryButtonLink}
-                      onChange={(event) =>
-                        updateHeroField("primaryButtonLink", event.target.value)
-                      }
-                    />
-                  </label>
+                      <label className={styles.field}>
+                        <span>Primary button link</span>
+                        <input
+                          value={heroDraft.primaryButtonLink}
+                          onChange={(event) =>
+                            updateHeroField(
+                              "primaryButtonLink",
+                              event.target.value,
+                            )
+                          }
+                        />
+                      </label>
 
-                  <label className={`${styles.field} ${styles.full}`}>
-                    <span>Subtitle</span>
-                    <textarea
-                      value={heroDraft.subtitle}
-                      onChange={(event) =>
-                        updateHeroField("subtitle", event.target.value)
-                      }
-                    />
-                  </label>
+                      <label className={`${styles.field} ${styles.full}`}>
+                        <span>Subtitle</span>
+                        <textarea
+                          value={heroDraft.subtitle}
+                          onChange={(event) =>
+                            updateHeroField("subtitle", event.target.value)
+                          }
+                        />
+                      </label>
 
-                  <label className={`${styles.field} ${styles.full}`}>
-                    <span>Hero image URL</span>
-                    <input
-                      value={heroDraft.heroImageUrl}
-                      onChange={(event) =>
-                        updateHeroField("heroImageUrl", event.target.value)
-                      }
-                    />
-                  </label>
-                </div>
+                      <label className={`${styles.field} ${styles.full}`}>
+                        <span>Hero image URL</span>
+                        <input
+                          value={heroDraft.heroImageUrl}
+                          onChange={(event) =>
+                            updateHeroField("heroImageUrl", event.target.value)
+                          }
+                        />
+                      </label>
+                    </div>
 
-                <div className={styles.buttonRow}>
-                  <button className={styles.cancelButton} onClick={handleReset}>
-                    Reset
-                  </button>
+                    <div className={styles.buttonRow}>
+                      <button
+                        className={styles.cancelButton}
+                        onClick={handleReset}
+                        disabled={status === "Saving"}
+                      >
+                        Reset
+                      </button>
 
-                  <button className={styles.primaryButton} onClick={handleSave}>
-                    Save Hero
-                  </button>
-                </div>
+                      <button
+                        className={styles.primaryButton}
+                        onClick={handleSave}
+                        disabled={status === "Saving"}
+                      >
+                        {status === "Saving" ? "Saving..." : "Save Hero"}
+                      </button>
+                    </div>
+                  </>
+                )}
               </>
             ) : (
               <div className={styles.emptyState}>

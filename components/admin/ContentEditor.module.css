@@ -463,3 +463,26 @@
   font-weight: 800;
   text-decoration: none;
 }
+
+.primaryButton:disabled,
+.cancelButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.errorBadge {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.loadingBox {
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed #d1d5db;
+  border-radius: 16px;
+  background: #f8fafc;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 800;
+}
