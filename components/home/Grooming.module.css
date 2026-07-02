@@ -1,0 +1,160 @@
+.section {
+  background: #f5ede5;
+  padding: 84px 24px;
+  color: #2c1a0e;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.topGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  margin-bottom: 64px;
+}
+
+.copy {
+  max-width: 560px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 16px;
+  margin-bottom: 22px;
+  border-radius: 999px;
+  background: #ead6c3;
+  color: #7a4e2d;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.title {
+  margin: 0 0 18px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.highlight {
+  color: #c4956a;
+  font-style: italic;
+}
+
+.subtitle {
+  max-width: 48ch;
+  margin: 0 0 32px;
+  color: #8b7355;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 28px;
+  border-radius: 999px;
+  background: #5c3d2e;
+  color: #fdf8f0;
+  box-shadow: 0 4px 20px rgba(92, 61, 46, 0.25);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.imageWrap {
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border-radius: 24px;
+  background: #d8c5b0;
+  box-shadow: 0 16px 48px rgba(92, 61, 46, 0.18);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.card {
+  padding: 28px 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(92, 61, 46, 0.07);
+  background: #fdfaf5;
+  box-shadow: 0 2px 16px rgba(92, 61, 46, 0.07);
+}
+
+.icon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #ead6c3;
+  color: #7a4e2d;
+  font-size: 20px;
+}
+
+.cardTitle {
+  margin: 0 0 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  color: #2c1a0e;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.cardText {
+  margin: 0 0 16px;
+  color: #8b7355;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.price {
+  margin: 0;
+  color: #5c3d2e;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+@media (max-width: 1024px) {
+  .topGrid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .cardsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 68px 18px;
+  }
+
+  .cardsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .button {
+    width: 100%;
+  }
+}

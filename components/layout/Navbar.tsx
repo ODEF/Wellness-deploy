@@ -5,13 +5,12 @@ import { useEffect, useState } from "react";
 import styles from "./Navbar.module.css";
 
 const navLinks = [
-  { label: "Services", href: "#features" },
-  { label: "Grooming", href: "#features" },
-  { label: "Wellness Plans", href: "#features" },
-  { label: "About", href: "#features" },
+  { label: "Features", href: "#features" },
+  { label: "Services", href: "#services" },
+  { label: "Grooming", href: "#services" },
+  { label: "Wellness Plans", href: "#services" },
   { label: "Contact", href: "#contact" },
 ];
-
 export default function Navbar() {
   const [isSolid, setIsSolid] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
