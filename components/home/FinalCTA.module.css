@@ -1,0 +1,151 @@
+.section {
+  background: #f5ede5;
+  padding: 84px 24px;
+  color: #2c1a0e;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 1.35fr 0.65fr;
+  gap: 40px;
+  align-items: center;
+  padding: 56px;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at top right, rgba(196, 149, 106, 0.2), transparent 34%),
+    #5c3d2e;
+  box-shadow: 0 26px 80px rgba(92, 61, 46, 0.28);
+}
+
+.content {
+  max-width: 680px;
+}
+
+.eyebrow {
+  margin: 0 0 14px;
+  color: #cfe2d4;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.title {
+  max-width: 620px;
+  margin: 0 0 18px;
+  color: #fdf8f0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 1.12;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+.subtitle {
+  max-width: 58ch;
+  margin: 0 0 30px;
+  color: rgba(253, 248, 240, 0.72);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.primaryButton,
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 28px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.primaryButton {
+  background: #fdf8f0;
+  color: #5c3d2e;
+}
+
+.secondaryButton {
+  background: rgba(253, 248, 240, 0.1);
+  color: #fdf8f0;
+}
+
+.note {
+  max-width: 52ch;
+  margin: 0;
+  color: rgba(253, 248, 240, 0.52);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.contactBox {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contactItem {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 18px 20px;
+  border: 1px solid rgba(253, 248, 240, 0.12);
+  border-radius: 18px;
+  background: rgba(253, 248, 240, 0.08);
+  text-decoration: none;
+}
+
+.contactLabel {
+  color: rgba(253, 248, 240, 0.48);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.contactValue {
+  color: #fdf8f0;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .card {
+    grid-template-columns: 1fr;
+    padding: 42px;
+  }
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 68px 18px;
+  }
+
+  .card {
+    padding: 32px 24px;
+    border-radius: 24px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+}

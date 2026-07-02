@@ -75,6 +75,12 @@ export type HomeTestimonialItem = {
   avatarUrl: string;
 };
 
+export type HomeContactItem = {
+  label: string;
+  value: string;
+  href: string;
+};
+
 export type HomeContent = {
   hero: HomeHeroContent;
 
@@ -122,6 +128,18 @@ export type HomeContent = {
         stats: HomeTrustStat[];
         items: HomeTestimonialItem[];
     };
+    finalCta: {
+        eyebrow: string;
+        title: string;
+        subtitle: string;
+        primaryButtonText: string;
+        primaryButtonLink: string;
+        secondaryButtonText: string;
+        secondaryButtonLink: string;
+        note: string;
+        contactItems: HomeContactItem[];
+    };
+    
 };
 
 export const homeContent: HomeContent = {
@@ -443,5 +461,33 @@ export const homeContent: HomeContent = {
                 "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&auto=format",
             },
         ],
+  },
+    finalCta: {
+    eyebrow: "Ready to book?",
+    title: "Start your dog’s wellness visit today",
+    subtitle:
+        "Tell us what your dog needs and we will help you choose the right service, package, and appointment time.",
+    primaryButtonText: "Book Appointment",
+    primaryButtonLink: "mailto:hello@dogswellness.co",
+    secondaryButtonText: "View Services",
+    secondaryButtonLink: "#services",
+    note: "No pressure. We will help you choose the right care before confirming anything.",
+    contactItems: [
+        {
+        label: "Email",
+        value: "hello@dogswellness.co",
+        href: "mailto:hello@dogswellness.co",
         },
+        {
+        label: "Phone",
+        value: "+1 555 014 286",
+        href: "tel:+1555014286",
+        },
+        {
+        label: "Hours",
+        value: "Mon–Sat, 09:00–18:00",
+        href: "#contact",
+        },
+    ],
+    },
 };

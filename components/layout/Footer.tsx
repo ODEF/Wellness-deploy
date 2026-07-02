@@ -13,7 +13,7 @@ const footerLinks = [
 
 export default function Footer() {
   return (
-    <footer className={styles.footer} id="contact">
+   <footer className={styles.footer} id="footer">
       <div className={styles.inner}>
         <Link href="/" className={styles.logo}>
           <span className={styles.logoMark}>♥</span>

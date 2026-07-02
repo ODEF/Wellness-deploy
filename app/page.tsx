@@ -5,6 +5,7 @@ import Grooming from "../components/home/Grooming";
 import Packages from "../components/home/Packages";
 import OtherServices from "../components/home/OtherServices";
 import Testimonials from "../components/home/Testimonials";
+import FinalCta from "../components/home/FinalCTA";
 import { homeContent } from "../lib/home/homeContent";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
       <Packages packages={homeContent.packages} />
       <OtherServices otherServices={homeContent.otherServices} />
       <Testimonials testimonials={homeContent.testimonials} />
+      <FinalCta finalCta={homeContent.finalCta} />
     </main>
   );
 }
