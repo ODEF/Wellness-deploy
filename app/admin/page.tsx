@@ -1,12 +1,8 @@
-import { getFeaturesContent } from "../../lib/features/getFeaturesContent";
-import FeaturesEditor from "../../components/admin/FeaturesEditor";
-
-export default async function AdminFeaturesPage() {
-  const content = await getFeaturesContent();
-
+export default function AdminPage() {
   return (
-    <main>
-      <FeaturesEditor initialContent={content} />
+    <main style={{ padding: "120px 24px 60px" }}>
+      <h1>Admin Dashboard</h1>
+      <p>Admin editor will be connected after the frontend is finalized.</p>
     </main>
   );
 }

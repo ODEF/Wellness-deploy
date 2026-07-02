@@ -1,4 +1,4 @@
-export type FeaturesHeroContent = {
+export type HomeHeroContent = {
   trustBadge: string;
   titleMain: string;
   titleHighlight: string;
@@ -26,11 +26,23 @@ export type FeaturesHeroContent = {
   appointmentTime: string;
 };
 
-export type FeaturesContent = {
-  hero: FeaturesHeroContent;
+export type HomeFeatureItem = {
+  title: string;
+  description: string;
+  icon: string;
 };
 
-export const defaultFeaturesContent: FeaturesContent = {
+export type HomeContent = {
+  hero: HomeHeroContent;
+  features: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    items: HomeFeatureItem[];
+  };
+};
+
+export const homeContent: HomeContent = {
   hero: {
     trustBadge: "Trusted by 4,200+ families",
     titleMain: "Personalised wellness care",
@@ -41,7 +53,7 @@ export const defaultFeaturesContent: FeaturesContent = {
     primaryButtonText: "Start Now",
     primaryButtonLink: "/services",
     secondaryButtonText: "View Services",
-    secondaryButtonLink: "/features",
+    secondaryButtonLink: "#features",
 
     heroImageUrl:
       "https://images.unsplash.com/photo-1768676936784-22a5796db0fe?w=880&h=1100&fit=crop&auto=format",
@@ -63,5 +75,38 @@ export const defaultFeaturesContent: FeaturesContent = {
     appointmentLabel: "Next appointment",
     appointmentTitle: "Full Groom — Mochi",
     appointmentTime: "Tuesday, 10:00 AM · Studio 2",
+  },
+
+  features: {
+    eyebrow: "Why choose us",
+    title: "Everything your dog needs in one place",
+    subtitle:
+      "A calm, premium wellness experience designed around comfort, safety, and personalised care.",
+    items: [
+      {
+        icon: "✂",
+        title: "Professional grooming",
+        description:
+          "Gentle grooming, bathing, coat care, and styling by trained specialists.",
+      },
+      {
+        icon: "♡",
+        title: "Wellness-first approach",
+        description:
+          "Every service is planned around your dog’s comfort, health, and temperament.",
+      },
+      {
+        icon: "✓",
+        title: "Easy online booking",
+        description:
+          "Book services quickly with clear appointment times and simple confirmation.",
+      },
+      {
+        icon: "★",
+        title: "Trusted specialists",
+        description:
+          "Experienced caregivers using safe, patient, and stress-aware methods.",
+      },
+    ],
   },
 };

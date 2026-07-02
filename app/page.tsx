@@ -1,11 +1,12 @@
-import Image from "next/image";
-import styles from "./page.module.css";
-import Feature from "../app/features/page";
+import Hero from "../components/home/Hero";
+import Features from "../components/home/Features";
+import { homeContent } from "../lib/home/homeContent";
 
 export default function Home() {
   return (
     <main>
-      <Feature />
+      <Hero hero={homeContent.hero} />
+      <Features features={homeContent.features} />
     </main>
   );
 }

@@ -1,18 +1,10 @@
-import { getFeaturesContent } from "../../lib/features/getFeaturesContent";
-import FeaturesHero from "../../components/features/FeaturesHero";
+import Features from "../../components/home/Features";
+import { homeContent } from "../../lib/home/homeContent";
 
-export const revalidate = 0;
-
-export default async function FeaturesPage() {
-  const content = await getFeaturesContent();
-
+export default function FeaturesPage() {
   return (
     <main>
-      <FeaturesHero content={content} />
+      <Features features={homeContent.features} />
     </main>
   );
 }
-
-// 
-// Next.js Server Components can fetch from a database before rendering the page.
-// 

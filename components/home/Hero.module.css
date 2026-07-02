@@ -1,0 +1,328 @@
+.heroSection {
+  position: relative;
+  overflow: hidden;
+  padding: 100px 24px 80px;
+  background: #fbf7f1;
+  color: #2c1a0e;
+}
+
+.backgroundBlobOne {
+  position: absolute;
+  top: -120px;
+  right: -120px;
+  width: 500px;
+  height: 500px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(196, 149, 106, 0.18), transparent 70%);
+  pointer-events: none;
+}
+
+.backgroundBlobTwo {
+  position: absolute;
+  bottom: -80px;
+  left: -80px;
+  width: 400px;
+  height: 400px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(122, 158, 126, 0.15), transparent 70%);
+  pointer-events: none;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.content {
+  max-width: 620px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  margin-bottom: 28px;
+  border-radius: 999px;
+  background: #e3f0ea;
+  color: #3d6b48;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.badgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #7a9e7e;
+}
+
+.title {
+  max-width: 620px;
+  margin: 0 0 22px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.12;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.highlight {
+  color: #7a9e7e;
+  font-style: italic;
+}
+
+.subtitle {
+  max-width: 44ch;
+  margin: 0 0 36px;
+  color: #8b7355;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 44px;
+}
+
+.primaryButton,
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 48px;
+  padding: 0 28px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.primaryButton {
+  background: #5c3d2e;
+  color: #fdf8f0;
+  box-shadow: 0 6px 24px rgba(92, 61, 46, 0.28);
+}
+
+.secondaryButton {
+  background: #eae4d9;
+  color: #5c3d2e;
+}
+
+.reviewStrip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.avatars {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border: 2.5px solid #fbf7f1;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.stars {
+  margin-bottom: 3px;
+  color: #c4956a;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.ratingText {
+  margin: 0;
+  color: #8b7355;
+  font-size: 12px;
+}
+
+.ratingText strong {
+  color: #2c1a0e;
+}
+
+.visual {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.imageCard {
+  position: relative;
+  width: min(440px, 100%);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 28px;
+  background: #e8ddd0;
+  box-shadow: 0 32px 80px rgba(92, 61, 46, 0.2);
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: auto 0 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(44, 26, 14, 0.45), transparent);
+}
+
+.appointmentCard {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: rgba(253, 250, 245, 0.93);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 24px rgba(92, 61, 46, 0.14);
+}
+
+.appointmentLabel {
+  margin: 0 0 3px;
+  color: #7a9e7e;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.appointmentTitle {
+  margin: 0 0 1px;
+  color: #2c1a0e;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.appointmentTime {
+  margin: 0;
+  color: #8b7355;
+  font-size: 12px;
+}
+
+.appointmentIcon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: #edf4ee;
+  color: #7a9e7e;
+  font-size: 18px;
+}
+
+.floatingBadge {
+  position: absolute;
+  top: 32px;
+  left: -24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid rgba(92, 61, 46, 0.06);
+  border-radius: 18px;
+  background: #fdfaf5;
+  box-shadow: 0 8px 32px rgba(92, 61, 46, 0.14);
+}
+
+.heartIcon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #f5ede5;
+  color: #c4956a;
+}
+
+.floatingBadgeTitle {
+  margin: 0 0 1px;
+  color: #2c1a0e;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.floatingBadgeSubtitle {
+  margin: 0;
+  color: #8b7355;
+  font-size: 11px;
+}
+
+.statCard {
+  position: absolute;
+  right: -20px;
+  bottom: 120px;
+  padding: 12px 18px;
+  border-radius: 16px;
+  background: #5c3d2e;
+  box-shadow: 0 8px 28px rgba(92, 61, 46, 0.3);
+}
+
+.statValue {
+  margin: 0;
+  color: #fdf8f0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.statLabel {
+  margin: 2px 0 0;
+  color: rgba(253, 248, 240, 0.65);
+  font-size: 11px;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .visual {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 680px) {
+  .heroSection {
+    padding: 88px 18px 64px;
+  }
+
+  .floatingBadge,
+  .statCard {
+    display: none;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+}
