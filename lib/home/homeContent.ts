@@ -56,6 +56,25 @@ export type HomePackageItem = {
   features: string[];
 };
 
+export type HomeOtherServiceItem = {
+  icon: string;
+  title: string;
+  description: string;
+};
+
+export type HomeTrustStat = {
+  value: string;
+  label: string;
+};
+
+export type HomeTestimonialItem = {
+  name: string;
+  role: string;
+  quote: string;
+  rating: string;
+  avatarUrl: string;
+};
+
 export type HomeContent = {
   hero: HomeHeroContent;
 
@@ -85,10 +104,23 @@ export type HomeContent = {
     };
 
     packages: {
-    eyebrow: string;
-    title: string;
-    subtitle: string;
-    items: HomePackageItem[];
+        eyebrow: string;
+        title: string;
+        subtitle: string;
+        items: HomePackageItem[];
+    };
+    otherServices: {
+        eyebrow: string;
+        title: string;
+        subtitle: string;
+        items: HomeOtherServiceItem[];
+    };
+    testimonials: {
+        eyebrow: string;
+        title: string;
+        subtitle: string;
+        stats: HomeTrustStat[];
+        items: HomeTestimonialItem[];
     };
 };
 
@@ -319,4 +351,97 @@ export const homeContent: HomeContent = {
       },
     ],
   },
+  otherServices: {
+    eyebrow: "Complete dog wellness",
+    title: "More care options for every need",
+    subtitle:
+        "From health support to training and overnight stays, our care options help you build a full wellness routine for your dog.",
+    items: [
+        {
+        icon: "⚕",
+        title: "Vet Care",
+        description:
+            "Routine checkups, preventive care, and health guidance through trusted veterinary partners.",
+        },
+        {
+        icon: "✦",
+        title: "Dog Spa",
+        description:
+            "Relaxing spa treatments, coat masks, gentle massage, and calming comfort sessions.",
+        },
+        {
+        icon: "▣",
+        title: "Dog Hotel",
+        description:
+            "Safe short stays with supervision, clean rest areas, and daily care routines.",
+        },
+        {
+        icon: "◆",
+        title: "Training",
+        description:
+            "Positive reinforcement sessions for manners, confidence, obedience, and better routines.",
+        },
+        {
+        icon: "◌",
+        title: "Nutrition Plans",
+        description:
+            "Food and wellness guidance based on age, activity level, breed, and lifestyle.",
+        },
+        {
+        icon: "♡",
+        title: "Wellness Plans",
+        description:
+            "Ongoing care plans combining grooming, checkups, nutrition, and comfort-focused services.",
+        },
+    ],
+    },
+    testimonials: {
+        eyebrow: "Trusted by dog families",
+        title: "Care that owners feel confident about",
+        subtitle:
+            "Families choose us for calm handling, clear communication, and consistent care across every appointment.",
+        stats: [
+            {
+            value: "4,200+",
+            label: "families served",
+            },
+            {
+            value: "98%",
+            label: "satisfaction rate",
+            },
+            {
+            value: "820+",
+            label: "verified reviews",
+            },
+        ],
+        items: [
+            {
+            name: "Emma Richardson",
+            role: "Owner of Luna",
+            rating: "★★★★★",
+            quote:
+                "Luna is usually nervous during grooming, but the team handled her slowly and calmly. She came home relaxed and looked perfect.",
+            avatarUrl:
+                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&auto=format",
+            },
+            {
+            name: "Daniel Carter",
+            role: "Owner of Milo",
+            rating: "★★★★★",
+            quote:
+                "The appointment was simple to book, the service was on time, and the groomer explained everything clearly after the visit.",
+            avatarUrl:
+                "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&auto=format",
+            },
+            {
+            name: "Sofia Bennett",
+            role: "Owner of Coco",
+            rating: "★★★★★",
+            quote:
+                "We use the full groom package every month. The quality is consistent and Coco is always treated with patience.",
+            avatarUrl:
+                "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&auto=format",
+            },
+        ],
+        },
 };

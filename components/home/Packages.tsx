@@ -19,7 +19,9 @@ export default function Packages({ packages }: PackagesProps) {
           {packages.items.map((item) => (
             <article
               key={item.name}
-              className={`${styles.card} ${item.popular ? styles.popular : ""}`}
+              className={`${styles.card} ${
+                item.popular ? styles.popular : ""
+              }`}
             >
               {item.popular && (
                 <div className={styles.popularBadge}>Most popular</div>
@@ -53,4 +55,4 @@ export default function Packages({ packages }: PackagesProps) {
       </div>
     </section>
   );
-}
+} 

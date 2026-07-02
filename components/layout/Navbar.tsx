@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import styles from "./Navbar.module.css";
 
 const navLinks = [
-  { label: "Features", href: "#features" },
   { label: "Services", href: "#services" },
-  { label: "Grooming", href: "#services" },
-  { label: "Wellness Plans", href: "#services" },
+  { label: "Grooming", href: "#grooming" },
+  { label: "Packages", href: "#packages" },
+  { label: "Reviews", href: "#testimonials" },
   { label: "Contact", href: "#contact" },
 ];
 export default function Navbar() {
