@@ -11,6 +11,7 @@ const navLinks = [
   { label: "Reviews", href: "#testimonials" },
   { label: "Contact", href: "#contact" },
 ];
+
 export default function Navbar() {
   const [isSolid, setIsSolid] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -21,7 +22,6 @@ export default function Navbar() {
     }
 
     handleScroll();
-
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
@@ -54,7 +54,7 @@ export default function Navbar() {
             Login
           </Link>
 
-          <Link href="#features" className={styles.ctaButton}>
+          <Link href="#contact" className={styles.ctaButton}>
             Book Appointment
           </Link>
 
@@ -65,7 +65,7 @@ export default function Navbar() {
             aria-label="Toggle menu"
             aria-expanded={isMobileOpen}
           >
-            {isMobileOpen ? "×" : "☰"}
+            <span>{isMobileOpen ? "×" : "☰"}</span>
           </button>
         </div>
       </div>
@@ -86,7 +86,7 @@ export default function Navbar() {
           </nav>
 
           <Link
-            href="#features"
+            href="#contact"
             className={styles.mobileCta}
             onClick={closeMobileMenu}
           >

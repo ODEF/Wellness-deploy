@@ -2,10 +2,10 @@ import Link from "next/link";
 import styles from "./Footer.module.css";
 
 const footerLinks = [
-  { label: "Services", href: "#features" },
-  { label: "Grooming", href: "#features" },
-  { label: "Wellness Plans", href: "#features" },
-  { label: "About", href: "#features" },
+  { label: "Services", href: "#services" },
+  { label: "Grooming", href: "#grooming" },
+  { label: "Packages", href: "#packages" },
+  { label: "Reviews", href: "#testimonials" },
   { label: "Contact", href: "#contact" },
   { label: "Privacy", href: "/privacy" },
   { label: "Terms", href: "/terms" },
@@ -13,7 +13,7 @@ const footerLinks = [
 
 export default function Footer() {
   return (
-   <footer className={styles.footer} id="footer">
+    <footer className={styles.footer} id="footer">
       <div className={styles.inner}>
         <Link href="/" className={styles.logo}>
           <span className={styles.logoMark}>♥</span>
