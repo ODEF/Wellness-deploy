@@ -734,3 +734,20 @@ Feature updates design
   line-height: 1.5;
   text-align: center;
 }
+
+/* 
+Testimonals
+ */
+
+
+ .nestedGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 760px) {
+  .nestedGrid {
+    grid-template-columns: 1fr;
+  }
+}

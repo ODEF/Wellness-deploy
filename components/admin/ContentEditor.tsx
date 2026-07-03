@@ -52,6 +52,7 @@ type ServicesDraft = HomeContent["services"];
 type GroomingDraft = HomeContent["grooming"];
 type PackagesDraft = HomeContent["packages"];
 type OtherServicesDraft = HomeContent["otherServices"];
+type TestimonialsDraft = HomeContent["testimonials"];
 // 
 // 
 
@@ -77,6 +78,7 @@ const initialServicesDraft: ServicesDraft = homeContent.services;
 const initialGroomingDraft: GroomingDraft = homeContent.grooming;
 const initialPackagesDraft: PackagesDraft = homeContent.packages;
 const initialOtherServicesDraft: OtherServicesDraft = homeContent.otherServices;
+const initialTestimonialsDraft: TestimonialsDraft = homeContent.testimonials;
 ///==================================================================================
 ///==================================================================================
 ///==================================================================================
@@ -92,15 +94,25 @@ export default function ContentEditor() {
 
   const [servicesDraft, setServicesDraft] =
     useState<ServicesDraft>(initialServicesDraft);
+
   const [groomingDraft, setGroomingDraft] = 
     useState<GroomingDraft>(initialGroomingDraft);  
+
   const [packagesDraft, setPackagesDraft] = 
     useState<PackagesDraft>(initialPackagesDraft);
+
   const [status, setStatus] = useState<
     "Loading" | "Draft" | "Saving" | "Saved" | "Error"
   >("Loading");
+
 const [otherServicesDraft, setOtherServicesDraft] =
   useState<OtherServicesDraft>(initialOtherServicesDraft);
+
+const [testimonialsDraft, setTestimonialsDraft] =
+  useState<TestimonialsDraft>(initialTestimonialsDraft);
+
+
+
 //   for the preview website mirroring
     const [previewVersion, setPreviewVersion] = useState(0);
   useEffect(() => {
@@ -133,6 +145,7 @@ const [otherServicesDraft, setOtherServicesDraft] =
         setGroomingDraft(result.content.grooming);
         setPackagesDraft(result.content.packages);
         setOtherServicesDraft(result.content.otherServices);
+        setTestimonialsDraft(result.content.testimonials);
         // =======================================
         // =======================================
         setStatus("Saved");
@@ -185,7 +198,57 @@ const [otherServicesDraft, setOtherServicesDraft] =
 
     setStatus("Draft");
   }
+    function updateTestimonialsField(
+    field: keyof Omit<TestimonialsDraft, "stats" | "items">,
+    value: string,
+    ) {
+    setTestimonialsDraft((current) => ({
+        ...current,
+        [field]: value,
+    }));
 
+    setStatus("Draft");
+    }
+
+    function updateTestimonialStat(
+    index: number,
+    field: keyof TestimonialsDraft["stats"][number],
+    value: string,
+    ) {
+    setTestimonialsDraft((current) => ({
+        ...current,
+        stats: current.stats.map((stat, statIndex) =>
+        statIndex === index
+            ? {
+                ...stat,
+                [field]: value,
+            }
+            : stat,
+        ),
+    }));
+
+    setStatus("Draft");
+    }
+
+    function updateTestimonialItem(
+    index: number,
+    field: keyof TestimonialsDraft["items"][number],
+    value: string,
+    ) {
+    setTestimonialsDraft((current) => ({
+        ...current,
+        items: current.items.map((item, itemIndex) =>
+        itemIndex === index
+            ? {
+                ...item,
+                [field]: value,
+            }
+            : item,
+        ),
+    }));
+
+    setStatus("Draft");
+    }
 
 //   =============================================================================
 // Add Services update functions
@@ -223,124 +286,124 @@ const [otherServicesDraft, setOtherServicesDraft] =
         setStatus("Draft");
     }
     // update grooming functions
-function updateGroomingField(
-  field: keyof Omit<GroomingDraft, "items">,
-  value: string,
-) {
-  setGroomingDraft((current) => ({
-    ...current,
-    [field]: value,
-  }));
+    function updateGroomingField(
+    field: keyof Omit<GroomingDraft, "items">,
+    value: string,
+    ) {
+    setGroomingDraft((current) => ({
+        ...current,
+        [field]: value,
+    }));
 
-  setStatus("Draft");
-}
-function updateGroomingItem(
-  index: number,
-  field: keyof GroomingDraft["items"][number],
-  value: string,
-) {
-  setGroomingDraft((current) => ({
-    ...current,
-    items: current.items.map((item, itemIndex) =>
-      itemIndex === index
-        ? {
-            ...item,
-            [field]: value,
-          }
-        : item,
-    ),
-  }));
+    setStatus("Draft");
+    }
+    function updateGroomingItem(
+    index: number,
+    field: keyof GroomingDraft["items"][number],
+    value: string,
+    ) {
+    setGroomingDraft((current) => ({
+        ...current,
+        items: current.items.map((item, itemIndex) =>
+        itemIndex === index
+            ? {
+                ...item,
+                [field]: value,
+            }
+            : item,
+        ),
+    }));
 
-  setStatus("Draft");
-}
+    setStatus("Draft");
+    }
 
-function updatePackagesField(
-  field: keyof Omit<PackagesDraft, "items">,
-  value: string,
-) {
-  setPackagesDraft((current) => ({
-    ...current,
-    [field]: value,
-  }));
+    function updatePackagesField(
+    field: keyof Omit<PackagesDraft, "items">,
+    value: string,
+    ) {
+    setPackagesDraft((current) => ({
+        ...current,
+        [field]: value,
+    }));
 
-  setStatus("Draft");
-}
+    setStatus("Draft");
+    }
 
-function updatePackageItem<
-  Field extends keyof Omit<PackagesDraft["items"][number], "features">,
->(
-  index: number,
-  field: Field,
-  value: PackagesDraft["items"][number][Field],
-) {
-  setPackagesDraft((current) => ({
-    ...current,
-    items: current.items.map((item, itemIndex) =>
-      itemIndex === index
-        ? {
-            ...item,
-            [field]: value,
-          }
-        : item,
-    ),
-  }));
+    function updatePackageItem<
+    Field extends keyof Omit<PackagesDraft["items"][number], "features">,
+    >(
+    index: number,
+    field: Field,
+    value: PackagesDraft["items"][number][Field],
+    ) {
+    setPackagesDraft((current) => ({
+        ...current,
+        items: current.items.map((item, itemIndex) =>
+        itemIndex === index
+            ? {
+                ...item,
+                [field]: value,
+            }
+            : item,
+        ),
+    }));
 
-  setStatus("Draft");
-}
+    setStatus("Draft");
+    }
 
-function updatePackageFeature(
-  packageIndex: number,
-  featureIndex: number,
-  value: string,
-) {
-  setPackagesDraft((current) => ({
-    ...current,
-    items: current.items.map((item, itemIndex) =>
-      itemIndex === packageIndex
-        ? {
-            ...item,
-            features: item.features.map((feature, currentFeatureIndex) =>
-              currentFeatureIndex === featureIndex ? value : feature,
-            ),
-          }
-        : item,
-    ),
-  }));
+    function updatePackageFeature(
+    packageIndex: number,
+    featureIndex: number,
+    value: string,
+    ) {
+    setPackagesDraft((current) => ({
+        ...current,
+        items: current.items.map((item, itemIndex) =>
+        itemIndex === packageIndex
+            ? {
+                ...item,
+                features: item.features.map((feature, currentFeatureIndex) =>
+                currentFeatureIndex === featureIndex ? value : feature,
+                ),
+            }
+            : item,
+        ),
+    }));
 
-  setStatus("Draft");
-}
+    setStatus("Draft");
+    }
 
-function updateOtherServicesField(
-  field: keyof Omit<OtherServicesDraft, "items">,
-  value: string,
-) {
-  setOtherServicesDraft((current) => ({
-    ...current,
-    [field]: value,
-  }));
+    function updateOtherServicesField(
+    field: keyof Omit<OtherServicesDraft, "items">,
+    value: string,
+    ) {
+    setOtherServicesDraft((current) => ({
+        ...current,
+        [field]: value,
+    }));
 
-  setStatus("Draft");
-}
+    setStatus("Draft");
+    }
 
-function updateOtherServiceItem(
-  index: number,
-  field: keyof OtherServicesDraft["items"][number],
-  value: string,
-) {
-  setOtherServicesDraft((current) => ({
-    ...current,
-    items: current.items.map((item, itemIndex) =>
-      itemIndex === index
-        ? {
-            ...item,
-            [field]: value,
-          }
-        : item,
-    ),
-  }));
+    function updateOtherServiceItem(
+    index: number,
+    field: keyof OtherServicesDraft["items"][number],
+    value: string,
+    ) {
+    setOtherServicesDraft((current) => ({
+        ...current,
+        items: current.items.map((item, itemIndex) =>
+        itemIndex === index
+            ? {
+                ...item,
+                [field]: value,
+            }
+            : item,
+        ),
+    }));
 
-  setStatus("Draft");
-}
+    setStatus("Draft");
+    }
 
   async function handleSave() {
     try {
@@ -359,6 +422,7 @@ function updateOtherServiceItem(
             grooming: groomingDraft,
             packages: packagesDraft,
             otherServices: otherServicesDraft,
+            testimonials: testimonialsDraft,
         }),
       });
 
@@ -397,6 +461,9 @@ function updateOtherServiceItem(
     }
     if (selectedSection === "Other Services") {
         setOtherServicesDraft(initialOtherServicesDraft);
+    }
+    if (selectedSection === "Testimonials") {
+        setTestimonialsDraft(initialTestimonialsDraft);
     }
     setStatus("Draft");
   }
@@ -1129,6 +1196,143 @@ function updateOtherServiceItem(
                     {status === "Saving" ? "Saving..." : "Save Other Services"}
                 </button>
                 </div>
+            </>) : selectedSection === "Testimonials" ? (
+  <>
+                <div className={styles.formGrid}>
+                <label className={styles.field}>
+                    <span>Eyebrow</span>
+                    <input
+                    value={testimonialsDraft.eyebrow}
+                    onChange={(event) =>
+                        updateTestimonialsField("eyebrow", event.target.value)
+                    }
+                    />
+                </label>
+
+                <label className={styles.field}>
+                    <span>Title</span>
+                    <input
+                    value={testimonialsDraft.title}
+                    onChange={(event) =>
+                        updateTestimonialsField("title", event.target.value)
+                    }
+                    />
+                </label>
+
+                <label className={`${styles.field} ${styles.full}`}>
+                    <span>Subtitle</span>
+                    <textarea
+                    value={testimonialsDraft.subtitle}
+                    onChange={(event) =>
+                        updateTestimonialsField("subtitle", event.target.value)
+                    }
+                    />
+                </label>
+
+                <div className={styles.itemEditor}>
+                    <h3>Trust Stats</h3>
+
+                    {testimonialsDraft.stats.map((stat, index) => (
+                    <div className={styles.nestedGrid} key={index}>
+                        <label className={styles.field}>
+                        <span>Stat {index + 1} value</span>
+                        <input
+                            value={stat.value}
+                            onChange={(event) =>
+                            updateTestimonialStat(index, "value", event.target.value)
+                            }
+                        />
+                        </label>
+
+                        <label className={styles.field}>
+                        <span>Stat {index + 1} label</span>
+                        <input
+                            value={stat.label}
+                            onChange={(event) =>
+                            updateTestimonialStat(index, "label", event.target.value)
+                            }
+                        />
+                        </label>
+                    </div>
+                    ))}
+                </div>
+
+                {testimonialsDraft.items.map((item, index) => (
+                    <div className={styles.itemEditor} key={index}>
+                    <h3>Testimonial {index + 1}</h3>
+
+                    <label className={styles.field}>
+                        <span>Name</span>
+                        <input
+                        value={item.name}
+                        onChange={(event) =>
+                            updateTestimonialItem(index, "name", event.target.value)
+                        }
+                        />
+                    </label>
+
+                    <label className={styles.field}>
+                        <span>Role</span>
+                        <input
+                        value={item.role}
+                        onChange={(event) =>
+                            updateTestimonialItem(index, "role", event.target.value)
+                        }
+                        />
+                    </label>
+
+                    <label className={styles.field}>
+                        <span>Rating</span>
+                        <input
+                        value={item.rating}
+                        onChange={(event) =>
+                            updateTestimonialItem(index, "rating", event.target.value)
+                        }
+                        />
+                    </label>
+
+                    <label className={`${styles.field} ${styles.full}`}>
+                        <span>Avatar image URL</span>
+                        <input
+                        value={item.avatarUrl}
+                        onChange={(event) =>
+                            updateTestimonialItem(index, "avatarUrl", event.target.value)
+                        }
+                        />
+                    </label>
+
+                    <label className={`${styles.field} ${styles.full}`}>
+                        <span>Quote</span>
+                        <textarea
+                        value={item.quote}
+                        onChange={(event) =>
+                            updateTestimonialItem(index, "quote", event.target.value)
+                        }
+                        />
+                    </label>
+                    </div>
+                ))}
+                </div>
+
+        <div className={styles.buttonRow}>
+        <button
+            type="button"
+            className={styles.cancelButton}
+            onClick={handleReset}
+            disabled={status === "Saving"}
+        >
+            Reset
+        </button>
+
+        <button
+            type="button"
+            className={styles.primaryButton}
+            onClick={handleSave}
+            disabled={status === "Saving"}
+        >
+            {status === "Saving" ? "Saving..." : "Save Testimonials"}
+        </button>
+        </div>
             </>) : (
                         <div className={styles.emptyState}>
                             <h3>{selectedSection} editor is not active yet</h3>

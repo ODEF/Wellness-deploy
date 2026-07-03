@@ -106,6 +106,10 @@ export async function PUT(request: Request) {
             ...existingContent.otherServices,
             ...(body.otherServices ?? {}),
             },
+            testimonials: {
+            ...existingContent.testimonials,
+            ...(body.testimonials ?? {}),
+            },
         }
     );
 
