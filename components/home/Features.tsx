@@ -18,7 +18,13 @@ export default function Features({ features }: FeaturesProps) {
         <div className={styles.grid}>
           {features.items.map((item) => (
             <article className={styles.card} key={item.title}>
-              <div className={styles.icon}>{item.icon}</div>
+              <div className={styles.icon}>
+                {item.imageUrl ? (
+                    <img src={item.imageUrl} alt="" className={styles.iconImage} />
+                ) : (
+                    item.icon
+                )}
+            </div>
               <h3 className={styles.cardTitle}>{item.title}</h3>
               <p className={styles.cardText}>{item.description}</p>
             </article>

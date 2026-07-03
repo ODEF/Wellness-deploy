@@ -30,6 +30,7 @@ export type HomeFeatureItem = {
   title: string;
   description: string;
   icon: string;
+  imageUrl?: string;
 };
 
 export type HomeServiceItem = {
@@ -183,30 +184,38 @@ export const homeContent: HomeContent = {
     subtitle:
       "A calm, premium wellness experience designed around comfort, safety, and personalised care.",
     items: [
-      {
-        icon: "✂",
-        title: "Professional grooming",
-        description:
-          "Gentle grooming, bathing, coat care, and styling by trained specialists.",
-      },
-      {
-        icon: "♡",
-        title: "Wellness-first approach",
-        description:
-          "Every service is planned around your dog’s comfort, health, and temperament.",
-      },
-      {
-        icon: "✓",
-        title: "Easy online booking",
-        description:
-          "Book services quickly with clear appointment times and simple confirmation.",
-      },
-      {
-        icon: "★",
-        title: "Trusted specialists",
-        description:
-          "Experienced caregivers using safe, patient, and stress-aware methods.",
-      },
+        {
+            icon: "✂",
+            imageUrl:
+            "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=120&h=120&fit=crop&auto=format",
+            title: "Professional grooming",
+            description:
+            "Gentle grooming, bathing, coat care, and styling by trained specialists.",
+        },
+        {
+            icon: "♡",
+            imageUrl:
+            "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=120&h=120&fit=crop&auto=format",
+            title: "Wellness-first approach",
+            description:
+            "Every service is planned around your dog’s comfort, health, and temperament.",
+        },
+        {
+            icon: "✓",
+            imageUrl:
+            "https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?w=120&h=120&fit=crop&auto=format",
+            title: "Easy online booking",
+            description:
+            "Book services quickly with clear appointment times and simple confirmation.",
+        },
+        {
+            icon: "★",
+            imageUrl:
+            "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=120&h=120&fit=crop&auto=format",
+            title: "Trusted specialists",
+            description:
+            "Experienced caregivers using safe, patient, and stress-aware methods.",
+        },
     ],
   },
 

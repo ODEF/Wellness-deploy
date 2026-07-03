@@ -70,26 +70,43 @@ export async function PUT(request: Request) {
       existingRow?.content as Partial<HomeContent>,
     );
 
+    // ccc
+    // ------------------------------------------------------ feature update for the homepage content
+
     const updatedContent = mergeHomeContent({
-      ...existingContent,
-      hero: {
-        ...existingContent.hero,
-        ...(body.hero ?? {}),
-      },
-    });
+            ...existingContent,
+
+            hero: {
+                ...existingContent.hero,
+                ...(body.hero ?? {}),
+            },
+
+            features: {
+                ...existingContent.features,
+                ...(body.features ?? {}),
+            },
+        }
+    );
+
+    //============================================================
+
+
+
+    // cc
 
     const { data, error } = await supabase
       .from("page_content")
       .upsert(
-        {
-          slug: "home",
-          content: updatedContent,
-          updated_at: new Date().toISOString(),
+         {
+            slug: "home",
+            page_slug: "home",
+            content: updatedContent,
+            updated_at: new Date().toISOString(),
         },
         {
-          onConflict: "slug",
+            onConflict: "slug",
         },
-      )
+        )
       .select()
       .single();
 
