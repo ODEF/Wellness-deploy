@@ -51,6 +51,7 @@ type FeaturesDraft = HomeContent["features"];
 type ServicesDraft = HomeContent["services"];
 type GroomingDraft = HomeContent["grooming"];
 type PackagesDraft = HomeContent["packages"];
+type OtherServicesDraft = HomeContent["otherServices"];
 // 
 // 
 
@@ -75,6 +76,7 @@ const initialFeaturesDraft: FeaturesDraft = homeContent.features;
 const initialServicesDraft: ServicesDraft = homeContent.services;
 const initialGroomingDraft: GroomingDraft = homeContent.grooming;
 const initialPackagesDraft: PackagesDraft = homeContent.packages;
+const initialOtherServicesDraft: OtherServicesDraft = homeContent.otherServices;
 ///==================================================================================
 ///==================================================================================
 ///==================================================================================
@@ -97,7 +99,8 @@ export default function ContentEditor() {
   const [status, setStatus] = useState<
     "Loading" | "Draft" | "Saving" | "Saved" | "Error"
   >("Loading");
-
+const [otherServicesDraft, setOtherServicesDraft] =
+  useState<OtherServicesDraft>(initialOtherServicesDraft);
 //   for the preview website mirroring
     const [previewVersion, setPreviewVersion] = useState(0);
   useEffect(() => {
@@ -129,6 +132,7 @@ export default function ContentEditor() {
         setServicesDraft(result.content.services);
         setGroomingDraft(result.content.grooming);
         setPackagesDraft(result.content.packages);
+        setOtherServicesDraft(result.content.otherServices);
         // =======================================
         // =======================================
         setStatus("Saved");
@@ -181,6 +185,7 @@ export default function ContentEditor() {
 
     setStatus("Draft");
   }
+
 
 //   =============================================================================
 // Add Services update functions
@@ -305,7 +310,37 @@ function updatePackageFeature(
   setStatus("Draft");
 }
 
+function updateOtherServicesField(
+  field: keyof Omit<OtherServicesDraft, "items">,
+  value: string,
+) {
+  setOtherServicesDraft((current) => ({
+    ...current,
+    [field]: value,
+  }));
 
+  setStatus("Draft");
+}
+
+function updateOtherServiceItem(
+  index: number,
+  field: keyof OtherServicesDraft["items"][number],
+  value: string,
+) {
+  setOtherServicesDraft((current) => ({
+    ...current,
+    items: current.items.map((item, itemIndex) =>
+      itemIndex === index
+        ? {
+            ...item,
+            [field]: value,
+          }
+        : item,
+    ),
+  }));
+
+  setStatus("Draft");
+}
 
   async function handleSave() {
     try {
@@ -323,6 +358,7 @@ function updatePackageFeature(
             services: servicesDraft,
             grooming: groomingDraft,
             packages: packagesDraft,
+            otherServices: otherServicesDraft,
         }),
       });
 
@@ -358,6 +394,9 @@ function updatePackageFeature(
     }
     if (selectedSection === "Packages") {
         setPackagesDraft(initialPackagesDraft);
+    }
+    if (selectedSection === "Other Services") {
+        setOtherServicesDraft(initialOtherServicesDraft);
     }
     setStatus("Draft");
   }
@@ -995,6 +1034,99 @@ function updatePackageFeature(
                     disabled={status === "Saving"}
                 >
                     {status === "Saving" ? "Saving..." : "Save Packages"}
+                </button>
+                </div>
+            </>) : selectedSection === "Other Services" ? (
+            <>
+                <div className={styles.formGrid}>
+                <label className={styles.field}>
+                    <span>Eyebrow</span>
+                    <input
+                    value={otherServicesDraft.eyebrow}
+                    onChange={(event) =>
+                        updateOtherServicesField("eyebrow", event.target.value)
+                    }
+                    />
+                </label>
+
+                <label className={styles.field}>
+                    <span>Title</span>
+                    <input
+                    value={otherServicesDraft.title}
+                    onChange={(event) =>
+                        updateOtherServicesField("title", event.target.value)
+                    }
+                    />
+                </label>
+
+                <label className={`${styles.field} ${styles.full}`}>
+                    <span>Subtitle</span>
+                    <textarea
+                    value={otherServicesDraft.subtitle}
+                    onChange={(event) =>
+                        updateOtherServicesField("subtitle", event.target.value)
+                    }
+                    />
+                </label>
+
+                {otherServicesDraft.items.map((item, index) => (
+                    <div className={styles.itemEditor} key={index}>
+                    <h3>Other Service {index + 1}</h3>
+
+                    <label className={styles.field}>
+                        <span>Icon</span>
+                        <input
+                        value={item.icon}
+                        onChange={(event) =>
+                            updateOtherServiceItem(index, "icon", event.target.value)
+                        }
+                        />
+                    </label>
+
+                    <label className={styles.field}>
+                        <span>Title</span>
+                        <input
+                        value={item.title}
+                        onChange={(event) =>
+                            updateOtherServiceItem(index, "title", event.target.value)
+                        }
+                        />
+                    </label>
+
+                    <label className={`${styles.field} ${styles.full}`}>
+                        <span>Description</span>
+                        <textarea
+                        value={item.description}
+                        onChange={(event) =>
+                            updateOtherServiceItem(
+                            index,
+                            "description",
+                            event.target.value,
+                            )
+                        }
+                        />
+                    </label>
+                    </div>
+                ))}
+                </div>
+
+                <div className={styles.buttonRow}>
+                <button
+                    type="button"
+                    className={styles.cancelButton}
+                    onClick={handleReset}
+                    disabled={status === "Saving"}
+                >
+                    Reset
+                </button>
+
+                <button
+                    type="button"
+                    className={styles.primaryButton}
+                    onClick={handleSave}
+                    disabled={status === "Saving"}
+                >
+                    {status === "Saving" ? "Saving..." : "Save Other Services"}
                 </button>
                 </div>
             </>) : (

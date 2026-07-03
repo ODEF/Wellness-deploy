@@ -102,6 +102,10 @@ export async function PUT(request: Request) {
             ...existingContent.packages,
             ...(body.packages ?? {}),
             },
+            otherServices: {
+            ...existingContent.otherServices,
+            ...(body.otherServices ?? {}),
+            },
         }
     );
 
