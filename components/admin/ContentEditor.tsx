@@ -436,33 +436,132 @@ export default function ContentEditor() {
                   </button>
                 </div>
               </>
-            ) : selectedSection === "Services" ? (
-                <div className={styles.servicesPreview}>
-                    <p className={styles.previewEyebrow}>{servicesDraft.eyebrow}</p>
+            )  : selectedSection === "Services" ? (
+            <>
+                <div className={styles.formGrid}>
+                <label className={styles.field}>
+                    <span>Eyebrow</span>
+                    <input
+                    value={servicesDraft.eyebrow}
+                    onChange={(event) =>
+                        updateServicesField("eyebrow", event.target.value)
+                    }
+                    />
+                </label>
 
-                    <h3>{servicesDraft.title}</h3>
+                <label className={styles.field}>
+                    <span>Title</span>
+                    <input
+                    value={servicesDraft.title}
+                    onChange={(event) =>
+                        updateServicesField("title", event.target.value)
+                    }
+                    />
+                </label>
 
-                    <p>{servicesDraft.subtitle}</p>
+                <label className={`${styles.field} ${styles.full}`}>
+                    <span>Subtitle</span>
+                    <textarea
+                    value={servicesDraft.subtitle}
+                    onChange={(event) =>
+                        updateServicesField("subtitle", event.target.value)
+                    }
+                    />
+                </label>
 
-                    <div className={styles.previewServiceList}>
-                    {servicesDraft.items.map((item) => (
-                        <div key={item.id}>
-                        <span
-                            style={{
-                            backgroundColor: item.background,
-                            color: item.color,
-                            }}
-                        >
-                            {item.icon}
-                        </span>
+                {servicesDraft.items.map((item, index) => (
+                    <div className={styles.itemEditor} key={item.id}>
+                    <h3>Service {index + 1}</h3>
 
-                        <strong>{item.title}</strong>
-                        <small>{item.tagline}</small>
-                        </div>
-                    ))}
+                    <div className={styles.lockedField}>
+                        <span>System ID</span>
+                        <strong>{item.id}</strong>
                     </div>
+
+                    <label className={styles.field}>
+                        <span>Title</span>
+                        <input
+                        value={item.title}
+                        onChange={(event) =>
+                            updateServiceItem(index, "title", event.target.value)
+                        }
+                        />
+                    </label>
+
+                    <label className={styles.field}>
+                        <span>Tagline</span>
+                        <input
+                        value={item.tagline}
+                        onChange={(event) =>
+                            updateServiceItem(index, "tagline", event.target.value)
+                        }
+                        />
+                    </label>
+
+                    <label className={styles.field}>
+                        <span>Icon</span>
+                        <input
+                        value={item.icon}
+                        onChange={(event) =>
+                            updateServiceItem(index, "icon", event.target.value)
+                        }
+                        />
+                    </label>
+
+                    <label className={styles.field}>
+                        <span>Color</span>
+                        <input
+                        value={item.color}
+                        onChange={(event) =>
+                            updateServiceItem(index, "color", event.target.value)
+                        }
+                        />
+                    </label>
+
+                    <label className={styles.field}>
+                        <span>Background</span>
+                        <input
+                        value={item.background}
+                        onChange={(event) =>
+                            updateServiceItem(index, "background", event.target.value)
+                        }
+                        />
+                    </label>
+
+                    <label className={`${styles.field} ${styles.full}`}>
+                        <span>Description</span>
+                        <textarea
+                        value={item.description}
+                        onChange={(event) =>
+                            updateServiceItem(index, "description", event.target.value)
+                        }
+                        />
+                    </label>
+                    </div>
+                ))}
                 </div>
-        ) : selectedSection === "Features" ? (
+
+                <div className={styles.buttonRow}>
+                <button
+                    type="button"
+                    className={styles.cancelButton}
+                    onClick={handleReset}
+                    disabled={status === "Saving"}
+                >
+                    Reset
+                </button>
+
+                <button
+                    type="button"
+                    className={styles.primaryButton}
+                    onClick={handleSave}
+                    disabled={status === "Saving"}
+                >
+                    {status === "Saving" ? "Saving..." : "Save Services"}
+                </button>
+                </div>
+            </>
+        ) :  selectedSection === "Features" ? (
               <>
                 <div className={styles.formGrid}>
                   <label className={styles.field}>
