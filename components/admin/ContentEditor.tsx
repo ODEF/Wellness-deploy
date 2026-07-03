@@ -682,7 +682,19 @@ export default function ContentEditor() {
           </section>
 
           <aside className={styles.previewPanel}>
-            <h2>Live Preview</h2>
+            <div className={styles.previewHeader}>
+                <div>
+                <h2>Phone Preview</h2>
+                <p>Mobile layout preview</p>
+                </div>
+
+                <span>390 × 844</span>
+            </div>
+
+            <div className={styles.phoneFrame}>
+                <div className={styles.phoneTopBar} />
+
+                <div className={styles.phoneScreen}>
 
             {selectedSection === "Features" ? (
               <div className={styles.featuresPreview}>
@@ -726,9 +738,11 @@ export default function ContentEditor() {
                 <a href={heroDraft.primaryButtonLink}>
                   {heroDraft.primaryButtonText}
                 </a>
-              </div>
-            )}
-          </aside>
+                    </div>
+                )}
+                </div>
+            </div>
+            </aside>
         </section>
       </main>
     </div>
