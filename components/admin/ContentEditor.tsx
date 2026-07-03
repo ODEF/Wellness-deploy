@@ -199,11 +199,11 @@ export default function ContentEditor() {
     }
 
     function updateServiceItem(
-    index: number,
-    field: keyof ServicesDraft["items"][number],
-    value: string,
+        index: number,
+        field: keyof ServicesDraft["items"][number],
+        value: string,
     ) {
-    setServicesDraft((current) => ({
+        setServicesDraft((current) => ({
         ...current,
         items: current.items.map((item, itemIndex) =>
         itemIndex === index
@@ -215,10 +215,20 @@ export default function ContentEditor() {
         ),
     }));
     
-    setStatus("Draft");
+        setStatus("Draft");
     }
     // update grooming functions
-    
+function updateGroomingField(
+  field: keyof Omit<GroomingDraft, "items">,
+  value: string,
+) {
+  setGroomingDraft((current) => ({
+    ...current,
+    [field]: value,
+  }));
+
+  setStatus("Draft");
+}
 function updateGroomingItem(
   index: number,
   field: keyof GroomingDraft["items"][number],
@@ -661,7 +671,7 @@ function updatePackageFeature(
                 </button>
                 </div>
             </>
-        ) :  selectedSection === "Features" ? (
+            ) :  selectedSection === "Features" ? (
               <>
                 <div className={styles.formGrid}>
                   <label className={styles.field}>
@@ -775,273 +785,228 @@ function updatePackageFeature(
             // 
             // 
             ) : selectedSection === "Grooming" ? (
-  <>
-    <div className={styles.formGrid}>
-      <label className={styles.field}>
-        <span>Eyebrow</span>
-        <input
-          value={groomingDraft.eyebrow}
-          onChange={(event) =>
-            updateGroomingField("eyebrow", event.target.value)
-          }
-        />
-      </label>
+            <>
+                        <label className={styles.field}>
+                        <span>Eyebrow</span>
+                        <input
+                            value={groomingDraft.eyebrow}
+                            onChange={(event) =>
+                            updateGroomingField("eyebrow", event.target.value)
+                            }
+                        />
+                        </label>
 
-      <label className={styles.field}>
-        <span>Main title</span>
-        <input
-          value={groomingDraft.titleMain}
-          onChange={(event) =>
-            updateGroomingField("titleMain", event.target.value)
-          }
-        />
-      </label>
+                        <label className={styles.field}>
+                            <span>Main title</span>
+                            <input
+                            value={groomingDraft.titleMain}
+                            onChange={(event) =>
+                                updateGroomingField("titleMain", event.target.value)
+                            }
+                            />
+                        </label>
 
-      <label className={styles.field}>
-        <span>Highlighted title</span>
-        <input
-          value={groomingDraft.titleHighlight}
-          onChange={(event) =>
-            updateGroomingField("titleHighlight", event.target.value)
-          }
-        />
-      </label>
+                        <label className={styles.field}>
+                            <span>Highlighted title</span>
+                            <input
+                            value={groomingDraft.titleHighlight}
+                            onChange={(event) =>
+                                updateGroomingField("titleHighlight", event.target.value)
+                            }
+                            />
+                        </label>
 
-      <label className={styles.field}>
-        <span>Button text</span>
-        <input
-          value={groomingDraft.buttonText}
-          onChange={(event) =>
-            updateGroomingField("buttonText", event.target.value)
-          }
-        />
-      </label>
+                        <label className={styles.field}>
+                            <span>Button text</span>
+                            <input
+                            value={groomingDraft.buttonText}
+                            onChange={(event) =>
+                                updateGroomingField("buttonText", event.target.value)
+                            }
+                            />
+                        </label>
 
-      <label className={styles.field}>
-        <span>Button link</span>
-        <input
-          value={groomingDraft.buttonLink}
-          onChange={(event) =>
-            updateGroomingField("buttonLink", event.target.value)
-          }
-        />
-      </label>
+                        <label className={styles.field}>
+                            <span>Button link</span>
+                            <input
+                            value={groomingDraft.buttonLink}
+                            onChange={(event) =>
+                                updateGroomingField("buttonLink", event.target.value)
+                            }
+                            />
+                        </label>
 
-      <label className={`${styles.field} ${styles.full}`}>
-        <span>Subtitle</span>
-        <textarea
-          value={groomingDraft.subtitle}
-          onChange={(event) =>
-            updateGroomingField("subtitle", event.target.value)
-          }
-        />
-      </label>
+                        <label className={`${styles.field} ${styles.full}`}>
+                            <span>Subtitle</span>
+                            <textarea
+                            value={groomingDraft.subtitle}
+                            onChange={(event) =>
+                                updateGroomingField("subtitle", event.target.value)
+                            }
+                            />
+                        </label>
 
-      <label className={`${styles.field} ${styles.full}`}>
-        <span>Grooming image URL</span>
-        <input
-          value={groomingDraft.imageUrl}
-          onChange={(event) =>
-            updateGroomingField("imageUrl", event.target.value)
-          }
-        />
-      </label>
+                        <label className={`${styles.field} ${styles.full}`}>
+                            <span>Grooming image URL</span>
+                            <input
+                            value={groomingDraft.imageUrl}
+                            onChange={(event) =>
+                                updateGroomingField("imageUrl", event.target.value)
+                            }
+                            />
+                        </label>
 
-      {groomingDraft.items.map((item, index) => (
-        <div className={styles.itemEditor} key={index}>
-          <h3>Grooming Service {index + 1}</h3>
+                
 
-          <label className={styles.field}>
-            <span>Icon</span>
-            <input
-              value={item.icon}
-              onChange={(event) =>
-                updateGroomingItem(index, "icon", event.target.value)
-              }
-            />
-          </label>
+                        <div className={styles.buttonRow}>
+                        <button
+                            type="button"
+                            className={styles.cancelButton}
+                            onClick={handleReset}
+                            disabled={status === "Saving"}
+                        >
+                            Reset
+                        </button>
 
-          <label className={styles.field}>
-            <span>Title</span>
-            <input
-              value={item.title}
-              onChange={(event) =>
-                updateGroomingItem(index, "title", event.target.value)
-              }
-            />
-          </label>
+                        <button
+                            type="button"
+                            className={styles.primaryButton}
+                            onClick={handleSave}
+                            disabled={status === "Saving"}
+                        >
+                            {status === "Saving" ? "Saving..." : "Save Grooming"}
+                        </button>
+                        </div>
+            </>) : selectedSection === "Packages" ? (
+            <>
+                <div className={styles.formGrid}>
+                <label className={styles.field}>
+                    <span>Eyebrow</span>
+                    <input
+                    value={packagesDraft.eyebrow}
+                    onChange={(event) =>
+                        updatePackagesField("eyebrow", event.target.value)
+                    }
+                    />
+                </label>
 
-          <label className={styles.field}>
-            <span>Price</span>
-            <input
-              value={item.price}
-              onChange={(event) =>
-                updateGroomingItem(index, "price", event.target.value)
-              }
-            />
-          </label>
+                <label className={styles.field}>
+                    <span>Title</span>
+                    <input
+                    value={packagesDraft.title}
+                    onChange={(event) =>
+                        updatePackagesField("title", event.target.value)
+                    }
+                    />
+                </label>
 
-          <label className={`${styles.field} ${styles.full}`}>
-            <span>Description</span>
-            <textarea
-              value={item.description}
-              onChange={(event) =>
-                updateGroomingItem(index, "description", event.target.value)
-              }
-            />
-          </label>
-        </div>
-      ))}
-    </div>
+                <label className={`${styles.field} ${styles.full}`}>
+                    <span>Subtitle</span>
+                    <textarea
+                    value={packagesDraft.subtitle}
+                    onChange={(event) =>
+                        updatePackagesField("subtitle", event.target.value)
+                    }
+                    />
+                </label>
 
-    <div className={styles.buttonRow}>
-      <button
-        type="button"
-        className={styles.cancelButton}
-        onClick={handleReset}
-        disabled={status === "Saving"}
-      >
-        Reset
-      </button>
+                {packagesDraft.items.map((item, packageIndex) => (
+                    <div className={styles.itemEditor} key={packageIndex}>
+                    <h3>Package {packageIndex + 1}</h3>
 
-      <button
-        type="button"
-        className={styles.primaryButton}
-        onClick={handleSave}
-        disabled={status === "Saving"}
-      >
-        {status === "Saving" ? "Saving..." : "Save Grooming"}
-      </button>
-    </div>
-  </>) : selectedSection === "Packages" ? (
-  <>
-    <div className={styles.formGrid}>
-      <label className={styles.field}>
-        <span>Eyebrow</span>
-        <input
-          value={packagesDraft.eyebrow}
-          onChange={(event) =>
-            updatePackagesField("eyebrow", event.target.value)
-          }
-        />
-      </label>
+                    <label className={styles.field}>
+                        <span>Name</span>
+                        <input
+                        value={item.name}
+                        onChange={(event) =>
+                            updatePackageItem(packageIndex, "name", event.target.value)
+                        }
+                        />
+                    </label>
 
-      <label className={styles.field}>
-        <span>Title</span>
-        <input
-          value={packagesDraft.title}
-          onChange={(event) =>
-            updatePackagesField("title", event.target.value)
-          }
-        />
-      </label>
+                    <label className={styles.field}>
+                        <span>Tagline</span>
+                        <input
+                        value={item.tagline}
+                        onChange={(event) =>
+                            updatePackageItem(packageIndex, "tagline", event.target.value)
+                        }
+                        />
+                    </label>
 
-      <label className={`${styles.field} ${styles.full}`}>
-        <span>Subtitle</span>
-        <textarea
-          value={packagesDraft.subtitle}
-          onChange={(event) =>
-            updatePackagesField("subtitle", event.target.value)
-          }
-        />
-      </label>
+                    <label className={styles.field}>
+                        <span>Price</span>
+                        <input
+                        value={item.price}
+                        onChange={(event) =>
+                            updatePackageItem(packageIndex, "price", event.target.value)
+                        }
+                        />
+                    </label>
 
-      {packagesDraft.items.map((item, packageIndex) => (
-        <div className={styles.itemEditor} key={packageIndex}>
-          <h3>Package {packageIndex + 1}</h3>
+                    <label className={styles.checkboxField}>
+                        <input
+                        type="checkbox"
+                        checked={item.popular}
+                        onChange={(event) =>
+                            updatePackageItem(packageIndex, "popular", event.target.checked)
+                        }
+                        />
+                        <span>Mark as popular</span>
+                    </label>
 
-          <label className={styles.field}>
-            <span>Name</span>
-            <input
-              value={item.name}
-              onChange={(event) =>
-                updatePackageItem(packageIndex, "name", event.target.value)
-              }
-            />
-          </label>
+                    <div className={styles.packageFeatures}>
+                        <h4>Included features</h4>
 
-          <label className={styles.field}>
-            <span>Tagline</span>
-            <input
-              value={item.tagline}
-              onChange={(event) =>
-                updatePackageItem(packageIndex, "tagline", event.target.value)
-              }
-            />
-          </label>
+                        {item.features.map((feature, featureIndex) => (
+                        <label className={styles.field} key={featureIndex}>
+                            <span>Feature {featureIndex + 1}</span>
+                            <input
+                            value={feature}
+                            onChange={(event) =>
+                                updatePackageFeature(
+                                packageIndex,
+                                featureIndex,
+                                event.target.value,
+                                )
+                            }
+                            />
+                        </label>
+                        ))}
+                    </div>
+                    </div>
+                ))}
+                </div>
 
-          <label className={styles.field}>
-            <span>Price</span>
-            <input
-              value={item.price}
-              onChange={(event) =>
-                updatePackageItem(packageIndex, "price", event.target.value)
-              }
-            />
-          </label>
+                <div className={styles.buttonRow}>
+                <button
+                    type="button"
+                    className={styles.cancelButton}
+                    onClick={handleReset}
+                    disabled={status === "Saving"}
+                >
+                    Reset
+                </button>
 
-          <label className={styles.checkboxField}>
-            <input
-              type="checkbox"
-              checked={item.popular}
-              onChange={(event) =>
-                updatePackageItem(packageIndex, "popular", event.target.checked)
-              }
-            />
-            <span>Mark as popular</span>
-          </label>
-
-          <div className={styles.packageFeatures}>
-            <h4>Included features</h4>
-
-            {item.features.map((feature, featureIndex) => (
-              <label className={styles.field} key={featureIndex}>
-                <span>Feature {featureIndex + 1}</span>
-                <input
-                  value={feature}
-                  onChange={(event) =>
-                    updatePackageFeature(
-                      packageIndex,
-                      featureIndex,
-                      event.target.value,
-                    )
-                  }
-                />
-              </label>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-
-    <div className={styles.buttonRow}>
-      <button
-        type="button"
-        className={styles.cancelButton}
-        onClick={handleReset}
-        disabled={status === "Saving"}
-      >
-        Reset
-      </button>
-
-      <button
-        type="button"
-        className={styles.primaryButton}
-        onClick={handleSave}
-        disabled={status === "Saving"}
-      >
-        {status === "Saving" ? "Saving..." : "Save Packages"}
-      </button>
-    </div>
-  </>) : (
-              <div className={styles.emptyState}>
-                <h3>{selectedSection} editor is not active yet</h3>
-                <p>
-                  Hero and Features are active now. We will add editable fields
-                  for {selectedSection} next.
-                </p>
-              </div>
-            )}
+                <button
+                    type="button"
+                    className={styles.primaryButton}
+                    onClick={handleSave}
+                    disabled={status === "Saving"}
+                >
+                    {status === "Saving" ? "Saving..." : "Save Packages"}
+                </button>
+                </div>
+            </>) : (
+                        <div className={styles.emptyState}>
+                            <h3>{selectedSection} editor is not active yet</h3>
+                            <p>
+                            Hero and Features are active now. We will add editable fields
+                            for {selectedSection} next.
+                            </p>
+                        </div>
+                        )
+            }
           </section>
 
           {/* here was aside which was preview panels */}
