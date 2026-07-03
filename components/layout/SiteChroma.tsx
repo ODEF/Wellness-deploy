@@ -10,9 +10,11 @@ type SiteChromeProps = {
 
 export default function SiteChrome({ children }: SiteChromeProps) {
   const pathname = usePathname();
-  const isAdminRoute = pathname.startsWith("/admin");
 
-  if (isAdminRoute) {
+  const isDashboardRoute =
+    pathname.startsWith("/admin") || pathname.startsWith("/client");
+
+  if (isDashboardRoute) {
     return <>{children}</>;
   }
 
