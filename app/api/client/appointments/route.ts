@@ -58,7 +58,12 @@ export async function POST(request: Request) {
     const supabase = createSupabaseAdminClient();
     const body = await request.json();
 
-    if (!body.petName || !body.serviceName || !body.appointmentDate || !body.appointmentTime) {
+    if (
+      !body.petName ||
+      !body.serviceName ||
+      !body.appointmentDate ||
+      !body.appointmentTime
+    ) {
       return NextResponse.json(
         {
           error: "Missing required booking fields",

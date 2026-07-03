@@ -184,9 +184,9 @@ async function handleConfirm() {
                 className={styles.primaryButton}
                 onClick={handleConfirm}
                 disabled={status === "Saving"}
-                >
+              >
                 {status === "Saving" ? "Saving..." : "Confirm Booking"}
-            </button>
+               </button>
             </div>
           </div>
 
