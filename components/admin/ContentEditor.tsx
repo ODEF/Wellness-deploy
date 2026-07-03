@@ -44,12 +44,13 @@ type HeroDraft = Pick<
 
 ///after update in api
 //we are updating here
-
+//1
 //adding services and grooming and packages and other services and testimonials and final cta
 
 type FeaturesDraft = HomeContent["features"];
 type ServicesDraft = HomeContent["services"];
 type GroomingDraft = HomeContent["grooming"];
+type PackagesDraft = HomeContent["packages"];
 // 
 // 
 
@@ -73,6 +74,7 @@ const initialHeroDraft: HeroDraft = {
 const initialFeaturesDraft: FeaturesDraft = homeContent.features;
 const initialServicesDraft: ServicesDraft = homeContent.services;
 const initialGroomingDraft: GroomingDraft = homeContent.grooming;
+const initialPackagesDraft: PackagesDraft = homeContent.packages;
 ///==================================================================================
 ///==================================================================================
 ///==================================================================================
@@ -90,6 +92,8 @@ export default function ContentEditor() {
     useState<ServicesDraft>(initialServicesDraft);
   const [groomingDraft, setGroomingDraft] = 
     useState<GroomingDraft>(initialGroomingDraft);  
+  const [packagesDraft, setPackagesDraft] = 
+    useState<PackagesDraft>(initialPackagesDraft);
   const [status, setStatus] = useState<
     "Loading" | "Draft" | "Saving" | "Saved" | "Error"
   >("Loading");
@@ -124,6 +128,7 @@ export default function ContentEditor() {
         setFeaturesDraft(result.content.features);
         setServicesDraft(result.content.services);
         setGroomingDraft(result.content.grooming);
+        setPackagesDraft(result.content.packages);
         // =======================================
         // =======================================
         setStatus("Saved");
@@ -212,37 +217,86 @@ export default function ContentEditor() {
     
     setStatus("Draft");
     }
-    function updateGroomingField(
-        field: keyof Omit<GroomingDraft, "items">,
-        value: string,
-    ) {
-        setGroomingDraft((current) => ({
-            ...current,
+    // update grooming functions
+    
+function updateGroomingItem(
+  index: number,
+  field: keyof GroomingDraft["items"][number],
+  value: string,
+) {
+  setGroomingDraft((current) => ({
+    ...current,
+    items: current.items.map((item, itemIndex) =>
+      itemIndex === index
+        ? {
+            ...item,
             [field]: value,
-        }));
+          }
+        : item,
+    ),
+  }));
 
-        setStatus("Draft");
-        }
+  setStatus("Draft");
+}
 
-    function updateGroomingItem(
-        index: number,
-        field: keyof GroomingDraft["items"][number],
-        value: string,
-        ) {
-        setGroomingDraft((current) => ({
-            ...current,
-            items: current.items.map((item, itemIndex) =>
-            itemIndex === index
-                ? {
-                    ...item,
-                    [field]: value,
-                }
-                : item,
+function updatePackagesField(
+  field: keyof Omit<PackagesDraft, "items">,
+  value: string,
+) {
+  setPackagesDraft((current) => ({
+    ...current,
+    [field]: value,
+  }));
+
+  setStatus("Draft");
+}
+
+function updatePackageItem<
+  Field extends keyof Omit<PackagesDraft["items"][number], "features">,
+>(
+  index: number,
+  field: Field,
+  value: PackagesDraft["items"][number][Field],
+) {
+  setPackagesDraft((current) => ({
+    ...current,
+    items: current.items.map((item, itemIndex) =>
+      itemIndex === index
+        ? {
+            ...item,
+            [field]: value,
+          }
+        : item,
+    ),
+  }));
+
+  setStatus("Draft");
+}
+
+function updatePackageFeature(
+  packageIndex: number,
+  featureIndex: number,
+  value: string,
+) {
+  setPackagesDraft((current) => ({
+    ...current,
+    items: current.items.map((item, itemIndex) =>
+      itemIndex === packageIndex
+        ? {
+            ...item,
+            features: item.features.map((feature, currentFeatureIndex) =>
+              currentFeatureIndex === featureIndex ? value : feature,
             ),
-    }));
+          }
+        : item,
+    ),
+  }));
 
-        setStatus("Draft");
-        }
+  setStatus("Draft");
+}
+
+
+
   async function handleSave() {
     try {
       setStatus("Saving");
@@ -252,11 +306,13 @@ export default function ContentEditor() {
         headers: {
           "Content-Type": "application/json",
         },
+        // 7. Send  to API
         body: JSON.stringify({
             hero: heroDraft,
             features: featuresDraft,
             services: servicesDraft,
             grooming: groomingDraft,
+            packages: packagesDraft,
         }),
       });
 
@@ -289,6 +345,9 @@ export default function ContentEditor() {
         }
     if (selectedSection === "Grooming") {
         setGroomingDraft(initialGroomingDraft);
+    }
+    if (selectedSection === "Packages") {
+        setPackagesDraft(initialPackagesDraft);
     }
     setStatus("Draft");
   }
@@ -854,6 +913,126 @@ export default function ContentEditor() {
         {status === "Saving" ? "Saving..." : "Save Grooming"}
       </button>
     </div>
+  </>) : selectedSection === "Packages" ? (
+  <>
+    <div className={styles.formGrid}>
+      <label className={styles.field}>
+        <span>Eyebrow</span>
+        <input
+          value={packagesDraft.eyebrow}
+          onChange={(event) =>
+            updatePackagesField("eyebrow", event.target.value)
+          }
+        />
+      </label>
+
+      <label className={styles.field}>
+        <span>Title</span>
+        <input
+          value={packagesDraft.title}
+          onChange={(event) =>
+            updatePackagesField("title", event.target.value)
+          }
+        />
+      </label>
+
+      <label className={`${styles.field} ${styles.full}`}>
+        <span>Subtitle</span>
+        <textarea
+          value={packagesDraft.subtitle}
+          onChange={(event) =>
+            updatePackagesField("subtitle", event.target.value)
+          }
+        />
+      </label>
+
+      {packagesDraft.items.map((item, packageIndex) => (
+        <div className={styles.itemEditor} key={packageIndex}>
+          <h3>Package {packageIndex + 1}</h3>
+
+          <label className={styles.field}>
+            <span>Name</span>
+            <input
+              value={item.name}
+              onChange={(event) =>
+                updatePackageItem(packageIndex, "name", event.target.value)
+              }
+            />
+          </label>
+
+          <label className={styles.field}>
+            <span>Tagline</span>
+            <input
+              value={item.tagline}
+              onChange={(event) =>
+                updatePackageItem(packageIndex, "tagline", event.target.value)
+              }
+            />
+          </label>
+
+          <label className={styles.field}>
+            <span>Price</span>
+            <input
+              value={item.price}
+              onChange={(event) =>
+                updatePackageItem(packageIndex, "price", event.target.value)
+              }
+            />
+          </label>
+
+          <label className={styles.checkboxField}>
+            <input
+              type="checkbox"
+              checked={item.popular}
+              onChange={(event) =>
+                updatePackageItem(packageIndex, "popular", event.target.checked)
+              }
+            />
+            <span>Mark as popular</span>
+          </label>
+
+          <div className={styles.packageFeatures}>
+            <h4>Included features</h4>
+
+            {item.features.map((feature, featureIndex) => (
+              <label className={styles.field} key={featureIndex}>
+                <span>Feature {featureIndex + 1}</span>
+                <input
+                  value={feature}
+                  onChange={(event) =>
+                    updatePackageFeature(
+                      packageIndex,
+                      featureIndex,
+                      event.target.value,
+                    )
+                  }
+                />
+              </label>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div className={styles.buttonRow}>
+      <button
+        type="button"
+        className={styles.cancelButton}
+        onClick={handleReset}
+        disabled={status === "Saving"}
+      >
+        Reset
+      </button>
+
+      <button
+        type="button"
+        className={styles.primaryButton}
+        onClick={handleSave}
+        disabled={status === "Saving"}
+      >
+        {status === "Saving" ? "Saving..." : "Save Packages"}
+      </button>
+    </div>
   </>) : (
               <div className={styles.emptyState}>
                 <h3>{selectedSection} editor is not active yet</h3>
@@ -895,7 +1074,6 @@ export default function ContentEditor() {
                     The preview reloads after saving, so it shows the real saved homepage.
                 </p>
             </aside>
-          {/*Previews ending  */}
         </section>
       </main>
     </div>

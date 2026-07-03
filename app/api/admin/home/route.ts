@@ -98,6 +98,10 @@ export async function PUT(request: Request) {
                 ...existingContent.grooming,
                 ...(body.grooming ?? {}),
             },
+            packages: {
+            ...existingContent.packages,
+            ...(body.packages ?? {}),
+            },
         }
     );
 
