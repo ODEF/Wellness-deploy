@@ -53,6 +53,7 @@ type GroomingDraft = HomeContent["grooming"];
 type PackagesDraft = HomeContent["packages"];
 type OtherServicesDraft = HomeContent["otherServices"];
 type TestimonialsDraft = HomeContent["testimonials"];
+type FinalCtaDraft = HomeContent["finalCta"];
 // 
 // 
 
@@ -79,6 +80,7 @@ const initialGroomingDraft: GroomingDraft = homeContent.grooming;
 const initialPackagesDraft: PackagesDraft = homeContent.packages;
 const initialOtherServicesDraft: OtherServicesDraft = homeContent.otherServices;
 const initialTestimonialsDraft: TestimonialsDraft = homeContent.testimonials;
+const initialFinalCtaDraft: FinalCtaDraft = homeContent.finalCta;
 ///==================================================================================
 ///==================================================================================
 ///==================================================================================
@@ -89,6 +91,7 @@ export default function ContentEditor() {
 
 //   gets old
 // updates with new content from api
+// updates STATE useState
   const [featuresDraft, setFeaturesDraft] =
     useState<FeaturesDraft>(initialFeaturesDraft);
 
@@ -111,7 +114,8 @@ const [otherServicesDraft, setOtherServicesDraft] =
 const [testimonialsDraft, setTestimonialsDraft] =
   useState<TestimonialsDraft>(initialTestimonialsDraft);
 
-
+const [finalCtaDraft, setFinalCtaDraft] =
+  useState<FinalCtaDraft>(initialFinalCtaDraft);
 
 //   for the preview website mirroring
     const [previewVersion, setPreviewVersion] = useState(0);
@@ -146,6 +150,7 @@ const [testimonialsDraft, setTestimonialsDraft] =
         setPackagesDraft(result.content.packages);
         setOtherServicesDraft(result.content.otherServices);
         setTestimonialsDraft(result.content.testimonials);
+        setFinalCtaDraft(result.content.finalCta);
         // =======================================
         // =======================================
         setStatus("Saved");
@@ -158,46 +163,46 @@ const [testimonialsDraft, setTestimonialsDraft] =
     loadContent();
   }, []);
 
-  function updateHeroField(field: keyof HeroDraft, value: string) {
-    setHeroDraft((current) => ({
-      ...current,
-      [field]: value,
-    }));
+    function updateHeroField(field: keyof HeroDraft, value: string) {
+        setHeroDraft((current) => ({
+        ...current,
+        [field]: value,
+        }));
 
-    setStatus("Draft");
-  }
+        setStatus("Draft");
+    }
 
-  function updateFeaturesField(
-    field: keyof Omit<FeaturesDraft, "items">,
-    value: string,
-  ) {
-    setFeaturesDraft((current) => ({
-      ...current,
-      [field]: value,
-    }));
+    function updateFeaturesField(
+        field: keyof Omit<FeaturesDraft, "items">,
+        value: string,
+    ) {
+        setFeaturesDraft((current) => ({
+        ...current,
+        [field]: value,
+        }));
 
-    setStatus("Draft");
-  }
+        setStatus("Draft");
+    }
 
-  function updateFeatureItem(
-    index: number,
-    field: keyof FeaturesDraft["items"][number],
-    value: string,
-  ) {
-    setFeaturesDraft((current) => ({
-      ...current,
-      items: current.items.map((item, itemIndex) =>
-        itemIndex === index
-          ? {
-              ...item,
-              [field]: value,
-            }
-          : item,
-      ),
-    }));
+    function updateFeatureItem(
+        index: number,
+        field: keyof FeaturesDraft["items"][number],
+        value: string,
+    ) {
+        setFeaturesDraft((current) => ({
+        ...current,
+        items: current.items.map((item, itemIndex) =>
+            itemIndex === index
+            ? {
+                ...item,
+                [field]: value,
+                }
+            : item,
+        ),
+        }));
 
-    setStatus("Draft");
-  }
+        setStatus("Draft");
+    }
     function updateTestimonialsField(
     field: keyof Omit<TestimonialsDraft, "stats" | "items">,
     value: string,
@@ -231,9 +236,9 @@ const [testimonialsDraft, setTestimonialsDraft] =
     }
 
     function updateTestimonialItem(
-    index: number,
-    field: keyof TestimonialsDraft["items"][number],
-    value: string,
+        index: number,
+        field: keyof TestimonialsDraft["items"][number],
+        value: string,
     ) {
     setTestimonialsDraft((current) => ({
         ...current,
@@ -405,6 +410,41 @@ const [testimonialsDraft, setTestimonialsDraft] =
     setStatus("Draft");
     }
 
+    // Final CTA update functions
+    function updateFinalCtaField(
+    field: keyof Omit<FinalCtaDraft, "contactItems">,
+    value: string,
+    ) {
+    setFinalCtaDraft((current) => ({
+        ...current,
+        [field]: value,
+    }));
+
+    setStatus("Draft");
+    }
+
+    function updateFinalCtaContactItem(
+    index: number,
+    field: keyof FinalCtaDraft["contactItems"][number],
+    value: string,
+    ) {
+    setFinalCtaDraft((current) => ({
+        ...current,
+        contactItems: current.contactItems.map((item, itemIndex) =>
+        itemIndex === index
+            ? {
+                ...item,
+                [field]: value,
+            }
+            : item,
+        ),
+    }));
+
+    setStatus("Draft");
+    }
+
+    // 
+
   async function handleSave() {
     try {
       setStatus("Saving");
@@ -423,6 +463,7 @@ const [testimonialsDraft, setTestimonialsDraft] =
             packages: packagesDraft,
             otherServices: otherServicesDraft,
             testimonials: testimonialsDraft,
+            finalCta: finalCtaDraft,
         }),
       });
 
@@ -464,6 +505,9 @@ const [testimonialsDraft, setTestimonialsDraft] =
     }
     if (selectedSection === "Testimonials") {
         setTestimonialsDraft(initialTestimonialsDraft);
+    }
+    if (selectedSection === "Final CTA") {
+        setFinalCtaDraft(initialFinalCtaDraft);
     }
     setStatus("Draft");
   }
@@ -1333,6 +1377,145 @@ const [testimonialsDraft, setTestimonialsDraft] =
             {status === "Saving" ? "Saving..." : "Save Testimonials"}
         </button>
         </div>
+            </>) : selectedSection === "Final CTA" ? (
+  <>
+    <div className={styles.formGrid}>
+      <label className={styles.field}>
+        <span>Eyebrow</span>
+        <input
+          value={finalCtaDraft.eyebrow}
+          onChange={(event) =>
+            updateFinalCtaField("eyebrow", event.target.value)
+          }
+        />
+      </label>
+
+      <label className={styles.field}>
+        <span>Title</span>
+        <input
+          value={finalCtaDraft.title}
+          onChange={(event) =>
+            updateFinalCtaField("title", event.target.value)
+          }
+        />
+      </label>
+
+      <label className={`${styles.field} ${styles.full}`}>
+        <span>Subtitle</span>
+        <textarea
+          value={finalCtaDraft.subtitle}
+          onChange={(event) =>
+            updateFinalCtaField("subtitle", event.target.value)
+          }
+        />
+      </label>
+
+      <label className={styles.field}>
+        <span>Primary button text</span>
+        <input
+          value={finalCtaDraft.primaryButtonText}
+          onChange={(event) =>
+            updateFinalCtaField("primaryButtonText", event.target.value)
+          }
+        />
+      </label>
+
+      <label className={styles.field}>
+        <span>Primary button link</span>
+        <input
+          value={finalCtaDraft.primaryButtonLink}
+          onChange={(event) =>
+            updateFinalCtaField("primaryButtonLink", event.target.value)
+          }
+        />
+      </label>
+
+      <label className={styles.field}>
+        <span>Secondary button text</span>
+        <input
+          value={finalCtaDraft.secondaryButtonText}
+          onChange={(event) =>
+            updateFinalCtaField("secondaryButtonText", event.target.value)
+          }
+        />
+      </label>
+
+      <label className={styles.field}>
+        <span>Secondary button link</span>
+        <input
+          value={finalCtaDraft.secondaryButtonLink}
+          onChange={(event) =>
+            updateFinalCtaField("secondaryButtonLink", event.target.value)
+          }
+        />
+      </label>
+
+      <label className={`${styles.field} ${styles.full}`}>
+        <span>Note</span>
+        <input
+          value={finalCtaDraft.note}
+          onChange={(event) =>
+            updateFinalCtaField("note", event.target.value)
+          }
+        />
+      </label>
+
+      {finalCtaDraft.contactItems.map((item, index) => (
+        <div className={styles.itemEditor} key={index}>
+          <h3>Contact Item {index + 1}</h3>
+
+          <label className={styles.field}>
+            <span>Label</span>
+            <input
+              value={item.label}
+              onChange={(event) =>
+                updateFinalCtaContactItem(index, "label", event.target.value)
+              }
+            />
+          </label>
+
+          <label className={styles.field}>
+            <span>Value</span>
+            <input
+              value={item.value}
+              onChange={(event) =>
+                updateFinalCtaContactItem(index, "value", event.target.value)
+              }
+            />
+          </label>
+
+          <label className={`${styles.field} ${styles.full}`}>
+            <span>Link / href</span>
+            <input
+              value={item.href}
+              onChange={(event) =>
+                updateFinalCtaContactItem(index, "href", event.target.value)
+              }
+            />
+          </label>
+        </div>
+      ))}
+    </div>
+
+    <div className={styles.buttonRow}>
+      <button
+        type="button"
+        className={styles.cancelButton}
+        onClick={handleReset}
+        disabled={status === "Saving"}
+      >
+        Reset
+      </button>
+
+      <button
+        type="button"
+        className={styles.primaryButton}
+        onClick={handleSave}
+        disabled={status === "Saving"}
+      >
+        {status === "Saving" ? "Saving..." : "Save Final CTA"}
+      </button>
+    </div>
             </>) : (
                         <div className={styles.emptyState}>
                             <h3>{selectedSection} editor is not active yet</h3>

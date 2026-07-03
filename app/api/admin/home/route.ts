@@ -110,6 +110,10 @@ export async function PUT(request: Request) {
             ...existingContent.testimonials,
             ...(body.testimonials ?? {}),
             },
+            finalCta: {
+            ...existingContent.finalCta,
+            ...(body.finalCta ?? {}),
+            },
         }
     );
 
