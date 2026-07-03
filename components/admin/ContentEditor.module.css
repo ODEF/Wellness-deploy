@@ -691,6 +691,7 @@ Feature updates design
   justify-content: space-between;
   gap: 14px;
   margin-bottom: 16px;
+  
 }
 
 .previewHeader h2 {
@@ -716,12 +717,13 @@ Feature updates design
   font-weight: 800;
 }
 .phoneIframe {
-  width: 100%;
-  height: calc(100% - 17px);
+  width: 20vw;
+
   display: block;
   border: 0;
   border-radius: 24px;
   background: #fbf7f1;
+  height: 70vh;
 }
 
 .previewNote {

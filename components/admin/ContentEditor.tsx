@@ -49,7 +49,7 @@ type HeroDraft = Pick<
 
 type FeaturesDraft = HomeContent["features"];
 type ServicesDraft = HomeContent["services"];
-
+type GroomingDraft = HomeContent["grooming"];
 // 
 // 
 
@@ -67,11 +67,12 @@ const initialHeroDraft: HeroDraft = {
 //we add another initial draft for each of them
 //here
 ///==================================================================================
-///==================================================================================
+///===================================initial drafts===============================================
 ///==================================My Edit================================================
 
 const initialFeaturesDraft: FeaturesDraft = homeContent.features;
 const initialServicesDraft: ServicesDraft = homeContent.services;
+const initialGroomingDraft: GroomingDraft = homeContent.grooming;
 ///==================================================================================
 ///==================================================================================
 ///==================================================================================
@@ -87,6 +88,8 @@ export default function ContentEditor() {
 
   const [servicesDraft, setServicesDraft] =
     useState<ServicesDraft>(initialServicesDraft);
+  const [groomingDraft, setGroomingDraft] = 
+    useState<GroomingDraft>(initialGroomingDraft);  
   const [status, setStatus] = useState<
     "Loading" | "Draft" | "Saving" | "Saved" | "Error"
   >("Loading");
@@ -116,11 +119,11 @@ export default function ContentEditor() {
           heroImageUrl: result.content.hero.heroImageUrl,
         });
 
-
+        // Load Grooming from Supabase
         //set of updating elements
         setFeaturesDraft(result.content.features);
         setServicesDraft(result.content.services);
-
+        setGroomingDraft(result.content.grooming);
         // =======================================
         // =======================================
         setStatus("Saved");
@@ -206,9 +209,40 @@ export default function ContentEditor() {
             : item,
         ),
     }));
-
+    
     setStatus("Draft");
     }
+    function updateGroomingField(
+        field: keyof Omit<GroomingDraft, "items">,
+        value: string,
+    ) {
+        setGroomingDraft((current) => ({
+            ...current,
+            [field]: value,
+        }));
+
+        setStatus("Draft");
+        }
+
+    function updateGroomingItem(
+        index: number,
+        field: keyof GroomingDraft["items"][number],
+        value: string,
+        ) {
+        setGroomingDraft((current) => ({
+            ...current,
+            items: current.items.map((item, itemIndex) =>
+            itemIndex === index
+                ? {
+                    ...item,
+                    [field]: value,
+                }
+                : item,
+            ),
+    }));
+
+        setStatus("Draft");
+        }
   async function handleSave() {
     try {
       setStatus("Saving");
@@ -222,6 +256,7 @@ export default function ContentEditor() {
             hero: heroDraft,
             features: featuresDraft,
             services: servicesDraft,
+            grooming: groomingDraft,
         }),
       });
 
@@ -252,6 +287,9 @@ export default function ContentEditor() {
     if (selectedSection === "Services") {
         setServicesDraft(initialServicesDraft);
         }
+    if (selectedSection === "Grooming") {
+        setGroomingDraft(initialGroomingDraft);
+    }
     setStatus("Draft");
   }
 
@@ -673,7 +711,150 @@ export default function ContentEditor() {
                   </button>
                 </div>
               </>
-            ) : (
+            // add groooomingggggg
+            // 
+            // 
+            // 
+            ) : selectedSection === "Grooming" ? (
+  <>
+    <div className={styles.formGrid}>
+      <label className={styles.field}>
+        <span>Eyebrow</span>
+        <input
+          value={groomingDraft.eyebrow}
+          onChange={(event) =>
+            updateGroomingField("eyebrow", event.target.value)
+          }
+        />
+      </label>
+
+      <label className={styles.field}>
+        <span>Main title</span>
+        <input
+          value={groomingDraft.titleMain}
+          onChange={(event) =>
+            updateGroomingField("titleMain", event.target.value)
+          }
+        />
+      </label>
+
+      <label className={styles.field}>
+        <span>Highlighted title</span>
+        <input
+          value={groomingDraft.titleHighlight}
+          onChange={(event) =>
+            updateGroomingField("titleHighlight", event.target.value)
+          }
+        />
+      </label>
+
+      <label className={styles.field}>
+        <span>Button text</span>
+        <input
+          value={groomingDraft.buttonText}
+          onChange={(event) =>
+            updateGroomingField("buttonText", event.target.value)
+          }
+        />
+      </label>
+
+      <label className={styles.field}>
+        <span>Button link</span>
+        <input
+          value={groomingDraft.buttonLink}
+          onChange={(event) =>
+            updateGroomingField("buttonLink", event.target.value)
+          }
+        />
+      </label>
+
+      <label className={`${styles.field} ${styles.full}`}>
+        <span>Subtitle</span>
+        <textarea
+          value={groomingDraft.subtitle}
+          onChange={(event) =>
+            updateGroomingField("subtitle", event.target.value)
+          }
+        />
+      </label>
+
+      <label className={`${styles.field} ${styles.full}`}>
+        <span>Grooming image URL</span>
+        <input
+          value={groomingDraft.imageUrl}
+          onChange={(event) =>
+            updateGroomingField("imageUrl", event.target.value)
+          }
+        />
+      </label>
+
+      {groomingDraft.items.map((item, index) => (
+        <div className={styles.itemEditor} key={index}>
+          <h3>Grooming Service {index + 1}</h3>
+
+          <label className={styles.field}>
+            <span>Icon</span>
+            <input
+              value={item.icon}
+              onChange={(event) =>
+                updateGroomingItem(index, "icon", event.target.value)
+              }
+            />
+          </label>
+
+          <label className={styles.field}>
+            <span>Title</span>
+            <input
+              value={item.title}
+              onChange={(event) =>
+                updateGroomingItem(index, "title", event.target.value)
+              }
+            />
+          </label>
+
+          <label className={styles.field}>
+            <span>Price</span>
+            <input
+              value={item.price}
+              onChange={(event) =>
+                updateGroomingItem(index, "price", event.target.value)
+              }
+            />
+          </label>
+
+          <label className={`${styles.field} ${styles.full}`}>
+            <span>Description</span>
+            <textarea
+              value={item.description}
+              onChange={(event) =>
+                updateGroomingItem(index, "description", event.target.value)
+              }
+            />
+          </label>
+        </div>
+      ))}
+    </div>
+
+    <div className={styles.buttonRow}>
+      <button
+        type="button"
+        className={styles.cancelButton}
+        onClick={handleReset}
+        disabled={status === "Saving"}
+      >
+        Reset
+      </button>
+
+      <button
+        type="button"
+        className={styles.primaryButton}
+        onClick={handleSave}
+        disabled={status === "Saving"}
+      >
+        {status === "Saving" ? "Saving..." : "Save Grooming"}
+      </button>
+    </div>
+  </>) : (
               <div className={styles.emptyState}>
                 <h3>{selectedSection} editor is not active yet</h3>
                 <p>

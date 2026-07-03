@@ -94,6 +94,10 @@ export async function PUT(request: Request) {
                 ...existingContent.services,
                 ...(body.services ?? {}),
             },
+            grooming: {
+                ...existingContent.grooming,
+                ...(body.grooming ?? {}),
+            },
         }
     );
 
