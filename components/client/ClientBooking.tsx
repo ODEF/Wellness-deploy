@@ -29,11 +29,45 @@ export default function ClientBooking() {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState(timeSlots[1]);
   const [notes, setNotes] = useState("");
-  const [status, setStatus] = useState<"Draft" | "Confirmed">("Draft");
+  const [status, setStatus] = useState<
+    "Draft" | "Saving" | "Confirmed" | "Error"
+    >("Draft");
 
-  function handleConfirm() {
-    setStatus("Confirmed");
+async function handleConfirm() {
+  if (!selectedDate) {
+    setStatus("Error");
+    return;
   }
+
+  try {
+    setStatus("Saving");
+
+    const response = await fetch("/api/client/appointments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        petName: selectedPet,
+        serviceName: selectedService,
+        appointmentDate: selectedDate,
+        appointmentTime: selectedTime,
+        notes,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error ?? "Failed to create appointment");
+    }
+
+    setStatus("Confirmed");
+  } catch (error) {
+    console.error(error);
+    setStatus("Error");
+  }
+}
 
   return (
     <main className={styles.page}>
@@ -149,9 +183,10 @@ export default function ClientBooking() {
                 type="button"
                 className={styles.primaryButton}
                 onClick={handleConfirm}
-              >
-                Confirm Booking
-              </button>
+                disabled={status === "Saving"}
+                >
+                {status === "Saving" ? "Saving..." : "Confirm Booking"}
+            </button>
             </div>
           </div>
 
@@ -196,6 +231,12 @@ export default function ClientBooking() {
                   booking into Supabase and show it inside Appointments.
                 </p>
               </div>
+            )}
+            {status === "Error" && (
+                <div className={styles.errorBox}>
+                    <h3>Booking was not saved</h3>
+                    <p>Please select a date and try again.</p>
+                </div>
             )}
           </aside>
         </section>
