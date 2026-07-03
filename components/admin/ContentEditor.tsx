@@ -91,6 +91,8 @@ export default function ContentEditor() {
     "Loading" | "Draft" | "Saving" | "Saved" | "Error"
   >("Loading");
 
+//   for the preview website mirroring
+    const [previewVersion, setPreviewVersion] = useState(0);
   useEffect(() => {
     async function loadContent() {
       try {
@@ -230,6 +232,7 @@ export default function ContentEditor() {
       }
 
       setStatus("Saved");
+      setPreviewVersion((current) => current + 1);
     } catch (error) {
       console.error(error);
       setStatus("Error");
@@ -681,68 +684,37 @@ export default function ContentEditor() {
             )}
           </section>
 
-          <aside className={styles.previewPanel}>
-            <div className={styles.previewHeader}>
-                <div>
-                <h2>Phone Preview</h2>
-                <p>Mobile layout preview</p>
+          {/* here was aside which was preview panels */}
+
+
+          {/* now we change it  */}
+
+            <aside className={styles.previewPanel}>
+                <div className={styles.previewHeader}>
+                    <div>
+                    <h2>Phone Preview</h2>
+                    <p>Real public website preview</p>
+                    </div>
+
+                    <span>390 × 844</span>
                 </div>
 
-                <span>390 × 844</span>
-            </div>
+                <div className={styles.phoneFrame}>
+                    <div className={styles.phoneTopBar} />
 
-            <div className={styles.phoneFrame}>
-                <div className={styles.phoneTopBar} />
+                    <iframe
+                    key={previewVersion}
+                    src={`/?preview=${previewVersion}`}
+                    className={styles.phoneIframe}
+                    title="Homepage phone preview"
+                    />
+                </div>
 
-                <div className={styles.phoneScreen}>
-
-            {selectedSection === "Features" ? (
-              <div className={styles.featuresPreview}>
-                <p className={styles.previewEyebrow}>
-                  {featuresDraft.eyebrow}
+                <p className={styles.previewNote}>
+                    The preview reloads after saving, so it shows the real saved homepage.
                 </p>
-
-                <h3>{featuresDraft.title}</h3>
-
-                <p>{featuresDraft.subtitle}</p>
-
-                <div className={styles.previewFeatureList}>
-                  {featuresDraft.items.map((item, index) => (
-                    <div key={index}>
-                      <span>{item.icon}</span>
-                      <strong>{item.title}</strong>
-                      <small>{item.description}</small>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className={styles.previewCard}>
-                <div className={styles.previewBadge}>
-                  {heroDraft.trustBadge}
-                </div>
-
-                <h3>
-                  {heroDraft.titleMain} <em>{heroDraft.titleHighlight}</em>
-                </h3>
-
-                <p>{heroDraft.subtitle}</p>
-
-                <div
-                  className={styles.previewImage}
-                  style={{
-                    backgroundImage: `linear-gradient(rgba(44, 26, 14, 0.1), rgba(44, 26, 14, 0.1)), url("${heroDraft.heroImageUrl}")`,
-                  }}
-                />
-
-                <a href={heroDraft.primaryButtonLink}>
-                  {heroDraft.primaryButtonText}
-                </a>
-                    </div>
-                )}
-                </div>
-            </div>
             </aside>
+          {/*Previews ending  */}
         </section>
       </main>
     </div>
