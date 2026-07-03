@@ -71,10 +71,14 @@ export async function PUT(request: Request) {
     );
 
     // ccc
+    // here is add which sections can be updated for the homepage content
+    //first is 1. hero section
+    //second is 2. features section
+    //third is 3. services section
     // ------------------------------------------------------ feature update for the homepage content
 
     const updatedContent = mergeHomeContent({
-            ...existingContent,
+        ...existingContent,
 
             hero: {
                 ...existingContent.hero,
@@ -85,8 +89,16 @@ export async function PUT(request: Request) {
                 ...existingContent.features,
                 ...(body.features ?? {}),
             },
+
+            services: {
+                ...existingContent.services,
+                ...(body.services ?? {}),
+            },
         }
     );
+
+    //add services editor state
+    //components/admin/ContentEditor.tsx
 
     //============================================================
 

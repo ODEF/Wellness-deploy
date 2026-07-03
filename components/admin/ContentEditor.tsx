@@ -42,7 +42,16 @@ type HeroDraft = Pick<
   | "heroImageUrl"
 >;
 
+///after update in api
+//we are updating here
+
+//adding services and grooming and packages and other services and testimonials and final cta
+
 type FeaturesDraft = HomeContent["features"];
+type ServicesDraft = HomeContent["services"];
+
+// 
+// 
 
 const initialHeroDraft: HeroDraft = {
   trustBadge: homeContent.hero.trustBadge,
@@ -54,13 +63,30 @@ const initialHeroDraft: HeroDraft = {
   heroImageUrl: homeContent.hero.heroImageUrl,
 };
 
-const initialFeaturesDraft: FeaturesDraft = homeContent.features;
+/////after adding on top newly added services and grooming and packages and other services and testimonials and final cta
+//we add another initial draft for each of them
+//here
+///==================================================================================
+///==================================================================================
+///==================================My Edit================================================
 
+const initialFeaturesDraft: FeaturesDraft = homeContent.features;
+const initialServicesDraft: ServicesDraft = homeContent.services;
+///==================================================================================
+///==================================================================================
+///==================================================================================
+///
 export default function ContentEditor() {
   const [selectedSection, setSelectedSection] = useState("Hero");
   const [heroDraft, setHeroDraft] = useState<HeroDraft>(initialHeroDraft);
+
+//   gets old
+// updates with new content from api
   const [featuresDraft, setFeaturesDraft] =
     useState<FeaturesDraft>(initialFeaturesDraft);
+
+  const [servicesDraft, setServicesDraft] =
+    useState<ServicesDraft>(initialServicesDraft);
   const [status, setStatus] = useState<
     "Loading" | "Draft" | "Saving" | "Saved" | "Error"
   >("Loading");
@@ -88,8 +114,13 @@ export default function ContentEditor() {
           heroImageUrl: result.content.hero.heroImageUrl,
         });
 
-        setFeaturesDraft(result.content.features);
 
+        //set of updating elements
+        setFeaturesDraft(result.content.features);
+        setServicesDraft(result.content.services);
+
+        // =======================================
+        // =======================================
         setStatus("Saved");
       } catch (error) {
         console.error(error);
@@ -141,6 +172,41 @@ export default function ContentEditor() {
     setStatus("Draft");
   }
 
+//   =============================================================================
+// Add Services update functions
+// 
+// 
+    function updateServicesField(
+    field: keyof Omit<ServicesDraft, "items">,
+    value: string,
+    ) {
+    setServicesDraft((current) => ({
+        ...current,
+        [field]: value,
+    }));
+
+    setStatus("Draft");
+    }
+
+    function updateServiceItem(
+    index: number,
+    field: keyof ServicesDraft["items"][number],
+    value: string,
+    ) {
+    setServicesDraft((current) => ({
+        ...current,
+        items: current.items.map((item, itemIndex) =>
+        itemIndex === index
+            ? {
+                ...item,
+                [field]: value,
+            }
+            : item,
+        ),
+    }));
+
+    setStatus("Draft");
+    }
   async function handleSave() {
     try {
       setStatus("Saving");
@@ -151,8 +217,9 @@ export default function ContentEditor() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          hero: heroDraft,
-          features: featuresDraft,
+            hero: heroDraft,
+            features: featuresDraft,
+            services: servicesDraft,
         }),
       });
 
@@ -178,6 +245,10 @@ export default function ContentEditor() {
       setFeaturesDraft(initialFeaturesDraft);
     }
 
+    // reset services draft
+    if (selectedSection === "Services") {
+        setServicesDraft(initialServicesDraft);
+        }
     setStatus("Draft");
   }
 
@@ -365,7 +436,33 @@ export default function ContentEditor() {
                   </button>
                 </div>
               </>
-            ) : selectedSection === "Features" ? (
+            ) : selectedSection === "Services" ? (
+                <div className={styles.servicesPreview}>
+                    <p className={styles.previewEyebrow}>{servicesDraft.eyebrow}</p>
+
+                    <h3>{servicesDraft.title}</h3>
+
+                    <p>{servicesDraft.subtitle}</p>
+
+                    <div className={styles.previewServiceList}>
+                    {servicesDraft.items.map((item) => (
+                        <div key={item.id}>
+                        <span
+                            style={{
+                            backgroundColor: item.background,
+                            color: item.color,
+                            }}
+                        >
+                            {item.icon}
+                        </span>
+
+                        <strong>{item.title}</strong>
+                        <small>{item.tagline}</small>
+                        </div>
+                    ))}
+                    </div>
+                </div>
+        ) : selectedSection === "Features" ? (
               <>
                 <div className={styles.formGrid}>
                   <label className={styles.field}>
