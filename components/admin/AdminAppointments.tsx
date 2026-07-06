@@ -1,110 +1,63 @@
 import Link from "next/link";
-import styles from "./AdminAppointments.module.css";
 import { type ClientAppointment } from "../../lib/client/appointments";
-
-const appointments = [
-  {
-    id: "#APT-1008",
-    client: "Sarah Johnson",
-    pet: "Coco",
-    service: "Full Groom",
-    date: "Oct 12",
-    time: "10:00 AM",
-    status: "Pending",
-  },
-  {
-    id: "#APT-1007",
-    client: "Mariam K.",
-    pet: "Milo",
-    service: "Vet Checkup",
-    date: "Oct 14",
-    time: "12:30 PM",
-    status: "Confirmed",
-  },
-  {
-    id: "#APT-1006",
-    client: "Nika B.",
-    pet: "Luna",
-    service: "Dog Spa",
-    date: "Oct 16",
-    time: "09:00 AM",
-    status: "Pending",
-  },
-  {
-    id: "#APT-1005",
-    client: "Ana G.",
-    pet: "Rocky",
-    service: "Training Session",
-    date: "Oct 18",
-    time: "04:00 PM",
-    status: "Completed",
-  },
-];
-
-const stats = [
-  {
-    label: "Today",
-    value: "6",
-    detail: "scheduled visits",
-  },
-  {
-    label: "Pending",
-    value: "2",
-    detail: "need review",
-  },
-  {
-    label: "Confirmed",
-    value: "12",
-    detail: "this week",
-  },
-  {
-    label: "Completed",
-    value: "38",
-    detail: "this month",
-  },
-];
+import styles from "./AdminAppointments.module.css";
 
 type AdminAppointmentsProps = {
   appointments: ClientAppointment[];
 };
 
+function getStatusClass(status: string) {
+  if (status === "Pending") {
+    return styles.pending;
+  }
+
+  if (status === "Confirmed") {
+    return styles.confirmed;
+  }
+
+  return styles.completed;
+}
+
 export default function AdminAppointments({
   appointments,
 }: AdminAppointmentsProps) {
   const pendingCount = appointments.filter(
-  (appointment) => appointment.status === "Pending",
-).length;
+    (appointment) => appointment.status === "Pending",
+  ).length;
 
-const confirmedCount = appointments.filter(
-  (appointment) => appointment.status === "Confirmed",
-).length;
+  const confirmedCount = appointments.filter(
+    (appointment) => appointment.status === "Confirmed",
+  ).length;
 
-const completedCount = appointments.filter(
-  (appointment) => appointment.status === "Completed",
-).length;
+  const completedCount = appointments.filter(
+    (appointment) => appointment.status === "Completed",
+  ).length;
 
-    const stats = [
-      {
-        label: "Total",
-        value: String(appointments.length),
-        detail: "saved bookings",
-      },
-      {
-        label: "Pending",
-        value: String(pendingCount),
-        detail: "need review",
-      },
-      {
-        label: "Confirmed",
-        value: String(confirmedCount),
-        detail: "approved visits",
-      },
-      {
-        label: "Completed",
-        value: String(completedCount),
-        detail: "finished visits",
-      },
-    ];
+  const nextAppointment = appointments[0];
+
+  const stats = [
+    {
+      label: "Total",
+      value: String(appointments.length),
+      detail: "saved bookings",
+    },
+    {
+      label: "Pending",
+      value: String(pendingCount),
+      detail: "need review",
+    },
+    {
+      label: "Confirmed",
+      value: String(confirmedCount),
+      detail: "approved visits",
+    },
+    {
+      label: "Completed",
+      value: String(completedCount),
+      detail: "finished visits",
+    },
+  ];
+
   return (
     <main className={styles.page}>
       <aside className={styles.sidebar}>
@@ -174,123 +127,93 @@ const completedCount = appointments.filter(
               </div>
             </div>
 
-            <div className={styles.table}>
-              <div className={styles.tableHeader}>
-                <span>ID</span>
-                <span>Client</span>
-                <span>Pet</span>
-                <span>Service</span>
-                <span>Date</span>
-                <span>Time</span>
-                <span>Status</span>
-                <span>Actions</span>
+            {appointments.length === 0 ? (
+              <div className={styles.emptyBox}>
+                <h2>No appointments yet</h2>
+                <p>Client bookings from /client/book will appear here.</p>
               </div>
-
-             {appointments.length === 0 ? (
-  <div className={styles.emptyBox}>
-    <h2>No appointments yet</h2>
-    <p>Client bookings from /client/book will appear here.</p>
-  </div>
-) : (
-  <div className={styles.table}>
-    <div className={styles.tableHeader}>
-      <span>ID</span>
-      <span>Client</span>
-      <span>Pet</span>
-      <span>Service</span>
-      <span>Date</span>
-      <span>Time</span>
-      <span>Status</span>
-      <span>Actions</span>
-    </div>
-
-    {appointments.map((appointment) => (
-      <div className={styles.tableRow} key={appointment.id}>
-        <span>#{appointment.id.slice(0, 8)}</span>
-        <span>{appointment.client_name}</span>
-        <span>{appointment.pet_name}</span>
-        <span>{appointment.service_name}</span>
-        <span>{appointment.appointment_date}</span>
-        <span>{appointment.appointment_time}</span>
-
-        <strong
-          className={`${styles.status} ${
-            appointment.status === "Pending"
-              ? styles.pending
-              : appointment.status === "Confirmed"
-                ? styles.confirmed
-                : styles.completed
-          }`}
-        >
-          {appointment.status}
-        </strong>
-
-        <div className={styles.actions}>
-          <button type="button">View</button>
-          <button type="button">Confirm</button>
-        </div>
-      </div>
-    ))}
-  </div>
-)}
-                <div className={styles.tableRow} key={appointment.id}>
-                  <span>{appointment.id}</span>
-                  <span>{appointment.client}</span>
-                  <span>{appointment.pet}</span>
-                  <span>{appointment.service}</span>
-                  <span>{appointment.date}</span>
-                  <span>{appointment.time}</span>
-
-                  <strong
-                    className={`${styles.status} ${
-                      appointment.status === "Pending"
-                        ? styles.pending
-                        : appointment.status === "Confirmed"
-                          ? styles.confirmed
-                          : styles.completed
-                    }`}
-                  >
-                    {appointment.status}
-                  </strong>
-
-                  <div className={styles.actions}>
-                    <button type="button">View</button>
-                    <button type="button">Confirm</button>
-                  </div>
+            ) : (
+              <div className={styles.table}>
+                <div className={styles.tableHeader}>
+                  <span>ID</span>
+                  <span>Client</span>
+                  <span>Pet</span>
+                  <span>Service</span>
+                  <span>Date</span>
+                  <span>Time</span>
+                  <span>Status</span>
+                  <span>Actions</span>
                 </div>
-              ))}
-            </div>
+
+                {appointments.map((appointment) => (
+                  <div className={styles.tableRow} key={appointment.id}>
+                    <span>#{appointment.id.slice(0, 8)}</span>
+                    <span>{appointment.client_name}</span>
+                    <span>{appointment.pet_name}</span>
+                    <span>{appointment.service_name}</span>
+                    <span>{appointment.appointment_date}</span>
+                    <span>{appointment.appointment_time}</span>
+
+                    <strong
+                      className={`${styles.status} ${getStatusClass(
+                        appointment.status,
+                      )}`}
+                    >
+                      {appointment.status}
+                    </strong>
+
+                    <div className={styles.actions}>
+                      <button type="button">View</button>
+                      <button type="button">Confirm</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <aside className={styles.sidePanel}>
             <div className={styles.card}>
               <p className={styles.eyebrow}>Next appointment</p>
-              <h2>Full Groom</h2>
-              <p>Coco with Sarah Johnson</p>
 
-              <div className={styles.detailList}>
-                <div>
-                  <span>Date</span>
-                  <strong>Oct 12</strong>
-                </div>
+              {nextAppointment ? (
+                <>
+                  <h2>{nextAppointment.service_name}</h2>
+                  <p>
+                    {nextAppointment.pet_name} with{" "}
+                    {nextAppointment.client_name}
+                  </p>
 
-                <div>
-                  <span>Time</span>
-                  <strong>10:00 AM</strong>
-                </div>
+                  <div className={styles.detailList}>
+                    <div>
+                      <span>Date</span>
+                      <strong>{nextAppointment.appointment_date}</strong>
+                    </div>
 
-                <div>
-                  <span>Status</span>
-                  <strong>Pending</strong>
-                </div>
-              </div>
+                    <div>
+                      <span>Time</span>
+                      <strong>{nextAppointment.appointment_time}</strong>
+                    </div>
+
+                    <div>
+                      <span>Status</span>
+                      <strong>{nextAppointment.status}</strong>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h2>No bookings</h2>
+                  <p>There are no saved appointments yet.</p>
+                </>
+              )}
             </div>
 
             <div className={styles.noticeCard}>
-              <h3>Next backend step</h3>
+              <h3>Connected to Supabase</h3>
               <p>
-                After this UI works, client bookings will be saved into
-                Supabase and shown here automatically.
+                Client bookings saved from /client/book will now appear in this
+                admin queue.
               </p>
             </div>
           </aside>
