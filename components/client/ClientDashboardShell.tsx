@@ -1,6 +1,8 @@
 import Link from "next/link";
 import styles from "./ClientDashboardShell.module.css";
 import { type ClientAppointment } from "../../lib/client/appointments";
+import ClientSettingsForm from "./ClientSettingsForm";
+
 
 type ClientPage =
   | "Dashboard"
@@ -456,42 +458,9 @@ function SettingsContent() {
         breadcrumb="Client / Profile & Settings"
         title="Profile & Settings"
         description="Manage personal information, notification preferences, and account settings."
-        actionLabel="Save Changes"
       />
 
-      <section className={styles.settingsGrid}>
-        <div className={styles.panel}>
-          <div className={styles.formGrid}>
-            <label className={styles.field}>
-              <span>Full name</span>
-              <input defaultValue="Sarah Johnson" />
-            </label>
-
-            <label className={styles.field}>
-              <span>Email</span>
-              <input defaultValue="sarah@example.com" />
-            </label>
-
-            <label className={styles.field}>
-              <span>Phone</span>
-              <input defaultValue="+995 555 123 456" />
-            </label>
-
-            <label className={styles.field}>
-              <span>Address</span>
-              <input defaultValue="Tbilisi, Georgia" />
-            </label>
-          </div>
-        </div>
-
-        <div className={styles.planCard}>
-          <p className={styles.eyebrow}>Current plan</p>
-          <h2>Care Premium</h2>
-          <p>Includes grooming reminders, appointment history, and priority booking.</p>
-
-          <Link href="/client/orders">Manage plan</Link>
-        </div>
-      </section>
+      <ClientSettingsForm />
     </>
   );
 }
@@ -500,9 +469,10 @@ type PageHeaderProps = {
   breadcrumb: string;
   title: string;
   description: string;
-  actionLabel: string;
+  actionLabel?: string;
   actionHref?: string;
 };
+
 
 function PageHeader({
   breadcrumb,
@@ -519,11 +489,13 @@ function PageHeader({
         <p>{description}</p>
       </div>
 
-      {actionHref ? (
+      {actionLabel && actionHref && (
         <Link href={actionHref} className={styles.primaryButton}>
           {actionLabel}
         </Link>
-      ) : (
+      )}
+
+      {actionLabel && !actionHref && (
         <button type="button" className={styles.primaryButton}>
           {actionLabel}
         </button>
