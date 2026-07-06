@@ -501,6 +501,7 @@ type PageHeaderProps = {
   title: string;
   description: string;
   actionLabel: string;
+  actionHref?: string;
 };
 
 function PageHeader({
@@ -508,6 +509,7 @@ function PageHeader({
   title,
   description,
   actionLabel,
+  actionHref,
 }: PageHeaderProps) {
   return (
     <header className={styles.topbar}>
@@ -517,9 +519,15 @@ function PageHeader({
         <p>{description}</p>
       </div>
 
-      <button type="button" className={styles.primaryButton}>
-        {actionLabel}
-      </button>
+      {actionHref ? (
+        <Link href={actionHref} className={styles.primaryButton}>
+          {actionLabel}
+        </Link>
+      ) : (
+        <button type="button" className={styles.primaryButton}>
+          {actionLabel}
+        </button>
+      )}
     </header>
   );
 }
