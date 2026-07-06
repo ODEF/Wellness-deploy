@@ -17,7 +17,7 @@ function createSupabaseAdminClient() {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error("Missing Supabase environment variables");
+    return null;
   }
 
   return createClient(supabaseUrl, serviceRoleKey, {
@@ -30,6 +30,10 @@ function createSupabaseAdminClient() {
 
 export async function getClientAppointments(): Promise<ClientAppointment[]> {
   const supabase = createSupabaseAdminClient();
+
+  if (!supabase) {
+    return [];
+  }
 
   const { data, error } = await supabase
     .from("appointments")

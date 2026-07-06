@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./ClientDashboardShell.module.css";
+import { type ClientAppointment } from "../../lib/client/appointments";
 
 type ClientPage =
   | "Dashboard"
@@ -11,6 +12,7 @@ type ClientPage =
 
 type ClientDashboardShellProps = {
   activePage: ClientPage;
+  appointments?: ClientAppointment[];
 };
 
 const navItems = [
@@ -171,6 +173,7 @@ const orders = [
 
 export default function ClientDashboardShell({
   activePage,
+  appointments = [],
 }: ClientDashboardShellProps) {
   return (
     <div className={styles.dashboard}>
@@ -217,7 +220,9 @@ export default function ClientDashboardShell({
 
         {activePage === "My Pets" && <PetsContent />}
 
-        {activePage === "Appointments" && <AppointmentsContent />}
+        {activePage === "Appointments" && (
+          <AppointmentsContent appointments={appointments} />
+        )}
 
         {activePage === "Health Records" && <RecordsContent />}
 
@@ -333,7 +338,11 @@ function PetsContent() {
   );
 }
 
-function AppointmentsContent() {
+function AppointmentsContent({
+  appointments,
+}: {
+  appointments: ClientAppointment[];
+}) {
   return (
     <>
       <PageHeader
@@ -344,25 +353,32 @@ function AppointmentsContent() {
       />
 
       <section className={styles.panel}>
-        <div className={styles.table}>
-          <div className={styles.tableHeader}>
-            <span>Service</span>
-            <span>Pet</span>
-            <span>Date</span>
-            <span>Time</span>
-            <span>Status</span>
+        {appointments.length === 0 ? (
+          <div className={styles.emptyBox}>
+            <h2>No appointments yet</h2>
+            <p>Your saved bookings will appear here after you create them.</p>
           </div>
-
-          {appointments.map((appointment) => (
-            <div className={styles.tableRow} key={appointment.service}>
-              <span>{appointment.service}</span>
-              <span>{appointment.pet}</span>
-              <span>{appointment.date}</span>
-              <span>{appointment.time}</span>
-              <strong>{appointment.status}</strong>
+        ) : (
+          <div className={styles.table}>
+            <div className={styles.tableHeader}>
+              <span>Service</span>
+              <span>Pet</span>
+              <span>Date</span>
+              <span>Time</span>
+              <span>Status</span>
             </div>
-          ))}
-        </div>
+
+            {appointments.map((appointment) => (
+              <div className={styles.tableRow} key={appointment.id}>
+                <span>{appointment.service_name}</span>
+                <span>{appointment.pet_name}</span>
+                <span>{appointment.appointment_date}</span>
+                <span>{appointment.appointment_time}</span>
+                <strong>{appointment.status}</strong>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
     </>
   );

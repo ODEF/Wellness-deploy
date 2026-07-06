@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./AdminAppointments.module.css";
+import { type ClientAppointment } from "../../lib/client/appointments";
 
 const appointments = [
   {
@@ -63,7 +64,47 @@ const stats = [
   },
 ];
 
-export default function AdminAppointments() {
+type AdminAppointmentsProps = {
+  appointments: ClientAppointment[];
+};
+
+export default function AdminAppointments({
+  appointments,
+}: AdminAppointmentsProps) {
+  const pendingCount = appointments.filter(
+  (appointment) => appointment.status === "Pending",
+).length;
+
+const confirmedCount = appointments.filter(
+  (appointment) => appointment.status === "Confirmed",
+).length;
+
+const completedCount = appointments.filter(
+  (appointment) => appointment.status === "Completed",
+).length;
+
+    const stats = [
+      {
+        label: "Total",
+        value: String(appointments.length),
+        detail: "saved bookings",
+      },
+      {
+        label: "Pending",
+        value: String(pendingCount),
+        detail: "need review",
+      },
+      {
+        label: "Confirmed",
+        value: String(confirmedCount),
+        detail: "approved visits",
+      },
+      {
+        label: "Completed",
+        value: String(completedCount),
+        detail: "finished visits",
+      },
+    ];
   return (
     <main className={styles.page}>
       <aside className={styles.sidebar}>
@@ -145,7 +186,53 @@ export default function AdminAppointments() {
                 <span>Actions</span>
               </div>
 
-              {appointments.map((appointment) => (
+             {appointments.length === 0 ? (
+  <div className={styles.emptyBox}>
+    <h2>No appointments yet</h2>
+    <p>Client bookings from /client/book will appear here.</p>
+  </div>
+) : (
+  <div className={styles.table}>
+    <div className={styles.tableHeader}>
+      <span>ID</span>
+      <span>Client</span>
+      <span>Pet</span>
+      <span>Service</span>
+      <span>Date</span>
+      <span>Time</span>
+      <span>Status</span>
+      <span>Actions</span>
+    </div>
+
+    {appointments.map((appointment) => (
+      <div className={styles.tableRow} key={appointment.id}>
+        <span>#{appointment.id.slice(0, 8)}</span>
+        <span>{appointment.client_name}</span>
+        <span>{appointment.pet_name}</span>
+        <span>{appointment.service_name}</span>
+        <span>{appointment.appointment_date}</span>
+        <span>{appointment.appointment_time}</span>
+
+        <strong
+          className={`${styles.status} ${
+            appointment.status === "Pending"
+              ? styles.pending
+              : appointment.status === "Confirmed"
+                ? styles.confirmed
+                : styles.completed
+          }`}
+        >
+          {appointment.status}
+        </strong>
+
+        <div className={styles.actions}>
+          <button type="button">View</button>
+          <button type="button">Confirm</button>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
                 <div className={styles.tableRow} key={appointment.id}>
                   <span>{appointment.id}</span>
                   <span>{appointment.client}</span>

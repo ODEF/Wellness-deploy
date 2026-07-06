@@ -433,3 +433,27 @@
     width: 100%;
   }
 }
+
+/*  */
+
+.emptyBox {
+  border-radius: 18px;
+  background: #f8fafc;
+  padding: 28px;
+  text-align: center;
+}
+
+.emptyBox h2 {
+  margin: 0 0 8px;
+  color: #172033;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.emptyBox p {
+  max-width: 420px;
+  margin: 0 auto;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+}
