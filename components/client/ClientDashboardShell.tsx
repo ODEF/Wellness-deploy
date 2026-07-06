@@ -244,7 +244,7 @@ function DashboardContent() {
           <p>Review your pets, appointments, records, and recent activity.</p>
         </div>
 
-        <Link href="/client/appointments" className={styles.primaryButton}>
+        <Link href="/client/book" className={styles.primaryButton}>
           Book Appointment
         </Link>
       </header>
