@@ -7,6 +7,10 @@ import {
   fallbackClientProfile,
 } from "../../lib/client/profile";
 
+import ClientPetsManager from "./ClientPetsManager";
+import { type ClientPet, fallbackClientPets } from "../../lib/client/pets";
+
+
 type ClientPage =
   | "Dashboard"
   | "My Pets"
@@ -19,6 +23,7 @@ type ClientDashboardShellProps = {
   activePage: ClientPage;
   appointments?: ClientAppointment[];
   profile?: ClientProfile;
+  pets?: ClientPet[];
 };
 
 const navItems = [
@@ -181,6 +186,7 @@ export default function ClientDashboardShell({
   activePage,
   appointments = [],
   profile = fallbackClientProfile,
+   pets = fallbackClientPets,
 }: ClientDashboardShellProps) {
   const displayName = profile.full_name || fallbackClientProfile.full_name;
   const firstName = displayName.split(" ")[0];
@@ -229,7 +235,10 @@ export default function ClientDashboardShell({
       <main className={styles.main}>
         {activePage === "Dashboard" && <DashboardContent firstName={firstName} />}
 
-        {activePage === "My Pets" && <PetsContent />}
+        {activePage === "My Pets" &&
+           ( <PetsContent pets={pets} />)
+           
+       }
 
         {activePage === "Appointments" && (
           <AppointmentsContent appointments={appointments} />
@@ -313,38 +322,16 @@ function DashboardContent({ firstName }: { firstName: string }) {
   );
 }
 
-function PetsContent() {
+function PetsContent({ pets }: { pets: ClientPet[] }) {
   return (
     <>
       <PageHeader
         breadcrumb="Client / My Pets"
         title="My Pets"
-        description="Manage pet profiles, photos, care preferences, and basic information."
-        actionLabel="Add New Pet"
+        description="Manage saved pet profiles used for booking appointments."
       />
 
-      <section className={styles.petGrid}>
-        {pets.map((pet) => (
-          <article className={styles.petCard} key={pet.name}>
-            <img src={pet.image} alt={pet.name} />
-
-            <div className={styles.petCardBody}>
-              <div>
-                <h2>{pet.name}</h2>
-                <p>
-                  {pet.breed} · {pet.age}
-                </p>
-              </div>
-
-              <span>{pet.status}</span>
-            </div>
-
-            <Link href="/client/pets" className={styles.secondaryButton}>
-              View profile
-            </Link>
-          </article>
-        ))}
-      </section>
+      <ClientPetsManager initialPets={pets} />
     </>
   );
 }

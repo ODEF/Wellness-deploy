@@ -575,3 +575,62 @@
   font-size: 13px;
   font-weight: 900;
 }
+
+
+/*  */
+/*  */
+/*  */
+.petList {
+  display: grid;
+  gap: 14px;
+}
+
+.petCard {
+  display: flex;
+  gap: 14px;
+  border-radius: 18px;
+  background: #f8fafc;
+  padding: 16px;
+}
+
+.petAvatar {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #eadfd5;
+  color: #5c3d2e;
+  font-weight: 900;
+}
+
+.petCard h3 {
+  margin: 0 0 4px;
+  color: #172033;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.petCard p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.petMeta {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+
+.petMeta span {
+  border-radius: 999px;
+  background: #ffffff;
+  padding: 6px 10px;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 800;
+}
