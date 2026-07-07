@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@supabase/supabase-js";
+import { profile } from "console";
 
 function createSupabaseAdminClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -75,7 +76,15 @@ export async function POST(request: Request) {
     const { data, error } = await supabase
       .from("appointments")
       .insert({
-        client_name: "Sarah J.",
+        const { data: profile } = await supabase
+      .from("clients")
+      .select("full_name")
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    const clientName = profile?.full_name || "Sarah Johnson";
+        client_name: clientName,
         pet_name: body.petName,
         service_name: body.serviceName,
         appointment_date: body.appointmentDate,

@@ -1,5 +1,10 @@
 import ClientDashboardShell from "../../../components/client/ClientDashboardShell";
+import { getClientProfile } from "../../../lib/client/profile";
 
-export default function ClientSettingsPage() {
-  return <ClientDashboardShell activePage="Settings" />;
+export const dynamic = "force-dynamic";
+
+export default async function ClientSettingsPage() {
+  const profile = await getClientProfile();
+
+  return <ClientDashboardShell activePage="Settings" profile={profile} />;
 }

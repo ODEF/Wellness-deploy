@@ -2,7 +2,10 @@ import Link from "next/link";
 import styles from "./ClientDashboardShell.module.css";
 import { type ClientAppointment } from "../../lib/client/appointments";
 import ClientSettingsForm from "./ClientSettingsForm";
-
+import {
+  type ClientProfile,
+  fallbackClientProfile,
+} from "../../lib/client/profile";
 
 type ClientPage =
   | "Dashboard"
@@ -15,6 +18,7 @@ type ClientPage =
 type ClientDashboardShellProps = {
   activePage: ClientPage;
   appointments?: ClientAppointment[];
+  profile?: ClientProfile;
 };
 
 const navItems = [
@@ -176,7 +180,12 @@ const orders = [
 export default function ClientDashboardShell({
   activePage,
   appointments = [],
+  profile = fallbackClientProfile,
 }: ClientDashboardShellProps) {
+  const displayName = profile.full_name || fallbackClientProfile.full_name;
+  const firstName = displayName.split(" ")[0];
+  const initial = displayName.charAt(0).toUpperCase();
+
   return (
     <div className={styles.dashboard}>
       <aside className={styles.sidebar}>
@@ -209,16 +218,16 @@ export default function ClientDashboardShell({
         </nav>
 
         <div className={styles.userBox}>
-          <div className={styles.avatar}>S</div>
-          <div>
-            <strong>Sarah J.</strong>
-            <span>Client account</span>
-          </div>
+          <div className={styles.avatar}>{initial}</div>
+            <div>
+              <strong>{displayName}</strong>
+              <span>Client account</span>
+            </div>
         </div>
       </aside>
 
       <main className={styles.main}>
-        {activePage === "Dashboard" && <DashboardContent />}
+        {activePage === "Dashboard" && <DashboardContent firstName={firstName} />}
 
         {activePage === "My Pets" && <PetsContent />}
 
@@ -236,7 +245,7 @@ export default function ClientDashboardShell({
   );
 }
 
-function DashboardContent() {
+function DashboardContent({ firstName }: { firstName: string }) {
   return (
     <>
       <header className={styles.topbar}>

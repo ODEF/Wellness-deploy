@@ -3,6 +3,11 @@
 import Link from "next/link";
 import { useState } from "react";
 import styles from "./ClientBooking.module.css";
+import {
+  type ClientProfile,
+  fallbackClientProfile,
+} from "../../lib/client/profile";
+
 
 const pets = ["Coco", "Milo"];
 const services = [
@@ -23,7 +28,15 @@ const timeSlots = [
   "04:00 PM",
 ];
 
-export default function ClientBooking() {
+type ClientBookingProps = {
+  profile?: ClientProfile;
+};
+
+export default function ClientBooking({
+  profile = fallbackClientProfile,
+}: ClientBookingProps) {
+  const displayName = profile.full_name || fallbackClientProfile.full_name;
+  const initial = displayName.charAt(0).toUpperCase();
   const [selectedPet, setSelectedPet] = useState(pets[0]);
   const [selectedService, setSelectedService] = useState(services[0]);
   const [selectedDate, setSelectedDate] = useState("");
@@ -87,11 +100,11 @@ async function handleConfirm() {
         </nav>
 
         <div className={styles.userBox}>
-          <div className={styles.avatar}>S</div>
-          <div>
-            <strong>Sarah J.</strong>
-            <span>Client account</span>
-          </div>
+          <div className={styles.avatar}>{initial}</div>
+              <div>
+                <strong>{displayName}</strong>
+                <span>Client account</span>
+              </div>
         </div>
       </aside>
 
