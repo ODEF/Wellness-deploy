@@ -66,17 +66,12 @@ export async function POST(request: Request) {
       !body.appointmentTime
     ) {
       return NextResponse.json(
-        {
-          error: "Missing required booking fields",
-        },
+        { error: "Missing required booking fields" },
         { status: 400 },
       );
     }
 
-    const { data, error } = await supabase
-      .from("appointments")
-      .insert({
-        const { data: profile } = await supabase
+    const { data: profile } = await supabase
       .from("clients")
       .select("full_name")
       .order("created_at", { ascending: true })
@@ -84,6 +79,10 @@ export async function POST(request: Request) {
       .maybeSingle();
 
     const clientName = profile?.full_name || "Sarah Johnson";
+
+    const { data, error } = await supabase
+      .from("appointments")
+      .insert({
         client_name: clientName,
         pet_name: body.petName,
         service_name: body.serviceName,
@@ -97,10 +96,7 @@ export async function POST(request: Request) {
 
     if (error) {
       return NextResponse.json(
-        {
-          error: error.message,
-          details: error,
-        },
+        { error: error.message, details: error },
         { status: 500 },
       );
     }
