@@ -251,7 +251,7 @@ function DashboardContent({ firstName }: { firstName: string }) {
       <header className={styles.topbar}>
         <div>
           <p className={styles.breadcrumb}>Client / Dashboard</p>
-          <h1>Welcome back, Sarah!</h1>
+          <h1>Welcome back, {firstName}!</h1>
           <p>Review your pets, appointments, records, and recent activity.</p>
         </div>
 
