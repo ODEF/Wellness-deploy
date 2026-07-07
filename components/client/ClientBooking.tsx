@@ -7,9 +7,9 @@ import {
   type ClientProfile,
   fallbackClientProfile,
 } from "../../lib/client/profile";
+import { type ClientPet, fallbackClientPets } from "../../lib/client/pets";
 
 
-const pets = ["Coco", "Milo"];
 const services = [
   "Full Groom",
   "Bath & Blow Dry",
@@ -30,14 +30,17 @@ const timeSlots = [
 
 type ClientBookingProps = {
   profile?: ClientProfile;
+  pets?: ClientPet[];
 };
 
 export default function ClientBooking({
   profile = fallbackClientProfile,
+  pets = fallbackClientPets,
 }: ClientBookingProps) {
   const displayName = profile.full_name || fallbackClientProfile.full_name;
   const initial = displayName.charAt(0).toUpperCase();
-  const [selectedPet, setSelectedPet] = useState(pets[0]);
+  const petOptions = pets.length > 0 ? pets : fallbackClientPets;
+  const [selectedPet, setSelectedPet] = useState(petOptions[0]?.name ?? "");
   const [selectedService, setSelectedService] = useState(services[0]);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState(timeSlots[1]);
@@ -138,9 +141,11 @@ async function handleConfirm() {
                   value={selectedPet}
                   onChange={(event) => setSelectedPet(event.target.value)}
                 >
-                  {pets.map((pet) => (
-                    <option key={pet}>{pet}</option>
-                  ))}
+                  {petOptions.map((pet) => (
+                  <option key={pet.id} value={pet.name}>
+                    {pet.name}
+                  </option>
+                ))}
                 </select>
               </label>
 

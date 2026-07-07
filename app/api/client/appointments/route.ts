@@ -72,16 +72,17 @@ export async function POST(request: Request) {
     }
 
     const { data: profile } = await supabase
-      .from("clients")
-      .select("full_name")
-      .order("created_at", { ascending: true })
-      .limit(1)
-      .maybeSingle();
+    .from("clients")
+    .select("full_name")
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
 
     const clientName = profile?.full_name || "Sarah Johnson";
 
     const { data, error } = await supabase
       .from("appointments")
+      
       .insert({
         client_name: clientName,
         pet_name: body.petName,
