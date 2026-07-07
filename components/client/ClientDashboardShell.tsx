@@ -275,7 +275,7 @@ function DashboardContent({ firstName }: { firstName: string }) {
           <div className={styles.panelHeader}>
             <div>
               <p className={styles.eyebrow}>Recent activity</p>
-              <h2>Latest updates</h2>
+              <h2>Latest updaes</h2>
             </div>
           </div>
 
