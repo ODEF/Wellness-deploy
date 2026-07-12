@@ -1,13 +1,20 @@
 import Link from "next/link";
-import { type ActivityLog } from "../../lib/admin/activityLogs";
+import {
+  type ActivityLog,
+  type ActivityLogFilters,
+} from "../../lib/admin/activityLogs";
+import { type AdminClient } from "../../lib/admin/clients";
 import styles from "./AdminActivityLogs.module.css";
 
 type AdminActivityLogsProps = {
   logs: ActivityLog[];
+  clients: AdminClient[];
+  filters: ActivityLogFilters;
 };
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("en", {
+    timeZone: "Asia/Tbilisi",
     year: "numeric",
     month: "short",
     day: "2-digit",
@@ -20,7 +27,11 @@ function getActionLabel(log: ActivityLog) {
   return `${log.entity_type} / ${log.action}`;
 }
 
-export default function AdminActivityLogs({ logs }: AdminActivityLogsProps) {
+export default function AdminActivityLogs({
+  logs,
+  clients,
+  filters,
+}: AdminActivityLogsProps) {
   return (
     <main className={styles.page}>
       <aside className={styles.sidebar}>
@@ -61,7 +72,47 @@ export default function AdminActivityLogs({ logs }: AdminActivityLogsProps) {
             </p>
           </div>
         </header>
+        <form className={styles.filters} method="get">
+        <label className={styles.filterField}>
+            <span>Client</span>
+            <select name="clientId" defaultValue={filters.clientId ?? ""}>
+            <option value="">All clients</option>
 
+            {clients.map((client) => (
+                <option value={client.id} key={client.id}>
+                {client.full_name}
+                </option>
+            ))}
+            </select>
+        </label>
+
+        <label className={styles.filterField}>
+            <span>From time</span>
+            <input
+            type="time"
+            name="fromTime"
+            defaultValue={filters.fromTime ?? "13:00"}
+            />
+        </label>
+
+        <label className={styles.filterField}>
+            <span>To time</span>
+            <input
+            type="time"
+            name="toTime"
+            defaultValue={filters.toTime ?? "07:00"}
+            />
+        </label>
+
+        <div className={styles.filterActions}>
+            <button type="submit">Apply filters</button>
+            <Link href="/admin/activity">Clear</Link>
+        </div>
+        </form>
+
+        <p className={styles.filterSummary}>
+        Time filter uses Tbilisi time. For 13:00 → 07:00, logs are matched overnight.
+        </p>
         <section className={styles.panel}>
           <div className={styles.panelHeader}>
             <div>
