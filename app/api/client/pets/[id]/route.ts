@@ -30,7 +30,15 @@ export async function DELETE(
     const { id } = await context.params;
     const supabase = createSupabaseAdminClient();
 
-    const { error } = await supabase.from("pets").delete().eq("id", id);
+    const { data, error } = await supabase
+      .from("pets")
+      .update({
+        deleted_at: new Date().toISOString(),
+        deleted_by: "client",
+      })
+      .eq("id", id)
+      .select()
+      .single();
 
     if (error) {
       return NextResponse.json(
@@ -47,12 +55,64 @@ export async function DELETE(
 
     return NextResponse.json({
       success: true,
-      message: "Pet deleted",
+      pet: data,
+      message: "Pet moved to deleted pets",
     });
   } catch (error) {
     return NextResponse.json(
       {
         error: "Failed to delete pet",
+        details: String(error),
+      },
+      { status: 500 },
+    );
+  }
+}
+
+export async function PATCH(
+  request: Request,
+  context: {
+    params: Promise<{
+      id: string;
+    }>;
+  },
+) {
+  try {
+    const { id } = await context.params;
+    const supabase = createSupabaseAdminClient();
+
+    const { data, error } = await supabase
+      .from("pets")
+      .update({
+        deleted_at: null,
+        deleted_by: null,
+      })
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) {
+      return NextResponse.json(
+        {
+          error: error.message,
+          details: error,
+        },
+        { status: 500 },
+      );
+    }
+
+    revalidatePath("/client/pets");
+    revalidatePath("/client/book");
+
+    return NextResponse.json({
+      success: true,
+      pet: data,
+      message: "Pet restored",
+    });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error: "Failed to restore pet",
         details: String(error),
       },
       { status: 500 },

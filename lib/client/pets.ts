@@ -9,6 +9,8 @@ export type ClientPet = {
   weight: string | null;
   notes: string | null;
   created_at: string;
+  deleted_at: string | null;
+  deleted_by: string | null;
 };
 
 export const fallbackClientPets: ClientPet[] = [
@@ -21,6 +23,8 @@ export const fallbackClientPets: ClientPet[] = [
     weight: "6.5 kg",
     notes: "Sensitive skin",
     created_at: "",
+    deleted_at: null,
+    deleted_by: null,
   },
 ];
 
@@ -49,7 +53,10 @@ export async function getClientPets(): Promise<ClientPet[]> {
 
   const { data, error } = await supabase
     .from("pets")
-    .select("id, client_id, name, breed, age, weight, notes, created_at")
+    .select(
+      "id, client_id, name, breed, age, weight, notes, created_at, deleted_at, deleted_by",
+    )
+    .is("deleted_at", null)
     .order("created_at", { ascending: true });
 
   if (error || !data) {

@@ -18,14 +18,26 @@ function createSupabaseAdminClient() {
   });
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const supabase = createSupabaseAdminClient();
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get("status");
 
-    const { data, error } = await supabase
+    let query = supabase
       .from("pets")
-      .select("id, client_id, name, breed, age, weight, notes, created_at")
+      .select(
+        "id, client_id, name, breed, age, weight, notes, created_at, deleted_at, deleted_by",
+      )
       .order("created_at", { ascending: true });
+
+    if (status === "deleted") {
+      query = query.not("deleted_at", "is", null);
+    } else {
+      query = query.is("deleted_at", null);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -75,6 +87,8 @@ export async function POST(request: Request) {
         age: body.age ?? "",
         weight: body.weight ?? "",
         notes: body.notes ?? "",
+        deleted_at: null,
+        deleted_by: null,
       })
       .select()
       .single();
