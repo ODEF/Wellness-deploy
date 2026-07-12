@@ -659,3 +659,52 @@
   cursor: not-allowed;
   opacity: 0.65;
 }
+
+/* restore */
+.secondaryButton {
+  border: 0;
+  border-radius: 999px;
+  background: #f1f5f9;
+  padding: 10px 14px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.secondaryButton:hover {
+  background: #e2e8f0;
+}
+
+.secondaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.deletedPetsBox {
+  margin-top: 26px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 22px;
+}
+
+.restoreButton {
+  width: fit-content;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 999px;
+  background: #dcfce7;
+  padding: 8px 12px;
+  color: #166534;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.restoreButton:hover {
+  background: #bbf7d0;
+}
+
+.restoreButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
