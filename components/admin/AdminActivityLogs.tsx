@@ -1,0 +1,118 @@
+import Link from "next/link";
+import { type ActivityLog } from "../../lib/admin/activityLogs";
+import styles from "./AdminActivityLogs.module.css";
+
+type AdminActivityLogsProps = {
+  logs: ActivityLog[];
+};
+
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat("en", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(value));
+}
+
+function getActionLabel(log: ActivityLog) {
+  return `${log.entity_type} / ${log.action}`;
+}
+
+export default function AdminActivityLogs({ logs }: AdminActivityLogsProps) {
+  return (
+    <main className={styles.page}>
+      <aside className={styles.sidebar}>
+        <Link href="/admin" className={styles.logo}>
+          <span className={styles.logoMark}>A</span>
+          <span>Admin Panel</span>
+        </Link>
+
+        <nav className={styles.nav}>
+          <Link href="/admin">Dashboard</Link>
+          <Link href="/admin/content">Website Content</Link>
+          <Link href="/admin/appointments">Appointments</Link>
+          <Link href="/admin/activity" className={styles.active}>
+            Activity Logs
+          </Link>
+          <Link href="/admin/clients">Clients</Link>
+          <Link href="/admin/services">Services</Link>
+          <Link href="/admin/settings">Settings</Link>
+        </nav>
+
+        <div className={styles.adminBox}>
+          <div className={styles.avatar}>N</div>
+          <div>
+            <strong>Nata</strong>
+            <span>Administrator</span>
+          </div>
+        </div>
+      </aside>
+
+      <section className={styles.main}>
+        <header className={styles.topbar}>
+          <div>
+            <p className={styles.breadcrumb}>Admin / Activity Logs</p>
+            <h1>Activity Logs</h1>
+            <p>
+              Review client and system actions across pets, appointments,
+              services, payments, and orders.
+            </p>
+          </div>
+        </header>
+
+        <section className={styles.panel}>
+          <div className={styles.panelHeader}>
+            <div>
+              <p className={styles.eyebrow}>Latest events</p>
+              <h2>System activity history</h2>
+            </div>
+
+            <span>{logs.length} records</span>
+          </div>
+
+          {logs.length === 0 ? (
+            <div className={styles.emptyBox}>
+              <h2>No activity yet</h2>
+              <p>
+                New appointments, pet changes, payments, and service changes
+                will appear here.
+              </p>
+            </div>
+          ) : (
+            <div className={styles.timeline}>
+              {logs.map((log) => (
+                <article className={styles.logCard} key={log.id}>
+                  <div className={styles.logMarker} />
+
+                  <div className={styles.logBody}>
+                    <div className={styles.logTop}>
+                      <div>
+                        <span className={styles.tag}>
+                          {getActionLabel(log)}
+                        </span>
+
+                        <h3>{log.title || "Activity recorded"}</h3>
+                      </div>
+
+                      <time>{formatDate(log.created_at)}</time>
+                    </div>
+
+                    <p>{log.description || "No description provided."}</p>
+
+                    <div className={styles.logMeta}>
+                      <span>Actor: {log.actor_name || "Unknown"}</span>
+                      <span>Type: {log.actor_type}</span>
+                      <span>Entity: {log.entity_type}</span>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+      </section>
+    </main>
+  );
+}
