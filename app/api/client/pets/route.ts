@@ -78,20 +78,20 @@ export async function POST(request: Request) {
       .limit(1)
       .maybeSingle();
 
-    const { data, error } = await supabase
-      .from("pets")
-      .insert({
-        client_id: client?.id ?? null,
-        name: body.name,
-        breed: body.breed ?? "",
-        age: body.age ?? "",
-        weight: body.weight ?? "",
-        notes: body.notes ?? "",
-        deleted_at: null,
-        deleted_by: null,
-      })
-      .select()
-      .single();
+      const { data, error } = await supabase
+        .from("pets")
+        .insert({
+          client_id: client?.id ?? null,
+          name: body.name,
+          breed: body.breed ?? "",
+          age: body.age ?? "",
+          weight: body.weight ?? "",
+          notes: body.notes ?? "",
+          deleted_at: null,
+          deleted_by: null,
+        })
+        .select()
+        .single();
 
     if (error) {
       return NextResponse.json(
