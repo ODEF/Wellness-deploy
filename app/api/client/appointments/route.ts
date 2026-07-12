@@ -7,6 +7,7 @@ function createSupabaseAdminClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+
   if (!supabaseUrl || !serviceRoleKey) {
     throw new Error("Missing Supabase environment variables");
   }
@@ -22,7 +23,15 @@ function createSupabaseAdminClient() {
 export async function GET() {
   try {
     const supabase = createSupabaseAdminClient();
+    // add for the client logs 7/13/2026 3:11AM
+    const { data: profile } = await supabase
+      .from("clients")
+      .select("id, full_name")
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle();
 
+    const clientName = profile?.full_name || "Sarah Johnson";
     const { data, error } = await supabase
       .from("appointments")
       .select(
@@ -79,6 +88,9 @@ export async function POST(request: Request) {
     .maybeSingle();
 
     const clientName = profile?.full_name || "Sarah Johnson";
+    
+    revalidatePath("/client/appointments");
+    revalidatePath("/admin/appointments");
 
     const { data, error } = await supabase
       .from("appointments")
