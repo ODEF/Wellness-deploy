@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@supabase/supabase-js";
-import { profile } from "console";
 
 function createSupabaseAdminClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
 
   if (!supabaseUrl || !serviceRoleKey) {
     throw new Error("Missing Supabase environment variables");
@@ -23,15 +21,7 @@ function createSupabaseAdminClient() {
 export async function GET() {
   try {
     const supabase = createSupabaseAdminClient();
-    // add for the client logs 7/13/2026 3:11AM
-    const { data: profile } = await supabase
-      .from("clients")
-      .select("id, full_name")
-      .order("created_at", { ascending: true })
-      .limit(1)
-      .maybeSingle();
 
-    const clientName = profile?.full_name || "Sarah Johnson";
     const { data, error } = await supabase
       .from("appointments")
       .select(
@@ -81,20 +71,16 @@ export async function POST(request: Request) {
     }
 
     const { data: profile } = await supabase
-    .from("clients")
-    .select("full_name")
-    .order("created_at", { ascending: true })
-    .limit(1)
-    .maybeSingle();
+      .from("clients")
+      .select("id, full_name")
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle();
 
     const clientName = profile?.full_name || "Sarah Johnson";
-    
-    revalidatePath("/client/appointments");
-    revalidatePath("/admin/appointments");
 
     const { data, error } = await supabase
       .from("appointments")
-      
       .insert({
         client_name: clientName,
         pet_name: body.petName,
@@ -113,6 +99,23 @@ export async function POST(request: Request) {
         { status: 500 },
       );
     }
+
+    await supabase.from("activity_logs").insert({
+      entity_type: "appointments",
+      entity_id: data.id,
+      client_id: profile?.id ?? null,
+      action: "created",
+      actor_type: "client",
+      actor_name: clientName,
+      title: "Appointment booked",
+      description: `${body.serviceName} was booked for ${body.petName}.`,
+      metadata: {
+        pet_name: body.petName,
+        service_name: body.serviceName,
+        appointment_date: body.appointmentDate,
+        appointment_time: body.appointmentTime,
+      },
+    });
 
     revalidatePath("/client/appointments");
     revalidatePath("/admin/appointments");
