@@ -121,15 +121,6 @@ export async function PATCH(
         { status: 500 },
       );
     }
-
-    revalidatePath("/client/pets");
-    revalidatePath("/client/book");
-
-    return NextResponse.json({
-      success: true,
-      pet: data,
-      message: "Pet restored",
-    });
     const { data: client } = await supabase
         .from("clients")
         .select("full_name")
@@ -150,6 +141,15 @@ export async function PATCH(
             restored_at: new Date().toISOString(),
         },
     });
+    revalidatePath("/client/pets");
+    revalidatePath("/client/book");
+
+    return NextResponse.json({
+      success: true,
+      pet: data,
+      message: "Pet restored",
+    });
+    
   } catch (error) {
     return NextResponse.json(
       {
