@@ -75,7 +75,33 @@ export default function ClientPetsManager({
       setStatus("Error");
     }
   }
+  async function handleDeletePet(id: string) {
+  const confirmed = window.confirm("Delete this pet?");
 
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    setStatus("Saving");
+
+    const response = await fetch(`/api/client/pets/${id}`, {
+      method: "DELETE",
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error ?? "Failed to delete pet");
+    }
+
+    setPets((current) => current.filter((pet) => pet.id !== id));
+    setStatus("Saved");
+  } catch (error) {
+    console.error(error);
+    setStatus("Error");
+  }
+}
   return (
     <section className={styles.settingsGrid}>
       <div className={styles.panel}>
@@ -109,6 +135,14 @@ export default function ClientPetsManager({
                   </div>
 
                   {pet.notes && <p>{pet.notes}</p>}
+                  <button
+                    type="button"
+                    className={styles.deleteButton}
+                    onClick={() => handleDeletePet(pet.id)}
+                    disabled={status === "Saving"}
+                  >
+                    Delete Pet
+                  </button>
                 </div>
               </article>
             ))}
