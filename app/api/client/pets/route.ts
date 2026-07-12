@@ -46,63 +46,78 @@ export async function GET(request: Request) {
     return NextResponse.json({
       pets: data ?? [],
     });
-  } catch (error) {
-    return NextResponse.json(
-      {
-        error: "Failed to load pets",
-        details: String(error),
-      },
-      { status: 500 },
-    );
-  }
-}
-
-export async function POST(request: Request) {
-  try {
-    const supabase = createSupabaseAdminClient();
-    const body = await request.json();
-
-    if (!body.name) {
+    } catch (error) {
       return NextResponse.json(
         {
-          error: "Pet name is required",
-        },
-        { status: 400 },
-      );
-    }
-
-    const { data: client } = await supabase
-      .from("clients")
-      .select("id")
-      .order("created_at", { ascending: true })
-      .limit(1)
-      .maybeSingle();
-
-      const { data, error } = await supabase
-        .from("pets")
-        .insert({
-          client_id: client?.id ?? null,
-          name: body.name,
-          breed: body.breed ?? "",
-          age: body.age ?? "",
-          weight: body.weight ?? "",
-          notes: body.notes ?? "",
-          deleted_at: null,
-          deleted_by: null,
-        })
-        .select()
-        .single();
-
-    if (error) {
-      return NextResponse.json(
-        {
-          error: error.message,
-          details: error,
+          error: "Failed to load pets",
+          details: String(error),
         },
         { status: 500 },
       );
     }
+  }
 
+  export async function POST(request: Request) {
+    try {
+      const supabase = createSupabaseAdminClient();
+      const body = await request.json();
+
+      if (!body.name) {
+        return NextResponse.json(
+          {
+            error: "Pet name is required",
+          },
+          { status: 400 },
+        );
+      }
+
+      const { data: client } = await supabase
+        .from("clients")
+        .select("id, full_name")
+        .order("created_at", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+        const { data, error } = await supabase
+          .from("pets")
+          .insert({
+            client_id: client?.id ?? null,
+            name: body.name,
+            breed: body.breed ?? "",
+            age: body.age ?? "",
+            weight: body.weight ?? "",
+            notes: body.notes ?? "",
+            deleted_at: null,
+            deleted_by: null,
+          })
+          .select()
+          .single();
+
+      if (error) {
+        return NextResponse.json(
+          {
+            error: error.message,
+            details: error,
+          },
+          { status: 500 },
+        );
+      }
+        await supabase.from("activity_logs").insert({
+        entity_type: "pets",
+        entity_id: data.id,
+        client_id: data.client_id,
+        action: "created",
+        actor_type: "client",
+        actor_name: client?.full_name ?? "Client",
+        title: "Pet added",
+        description: `${data.name} was added to the client profile.`,
+        metadata: {
+          name: data.name,
+          breed: data.breed,
+          age: data.age,
+          weight: data.weight,
+        },
+      });
     revalidatePath("/client/pets");
     revalidatePath("/client/book");
 

@@ -49,7 +49,27 @@ export async function DELETE(
         { status: 500 },
       );
     }
+    const { data: client } = await supabase
+    .from("clients")
+    .select("full_name")
+    .eq("id", data.client_id)
+    .maybeSingle();
 
+    await supabase.from("activity_logs").insert({
+    entity_type: "pets",
+    entity_id: data.id,
+    client_id: data.client_id,
+    action: "deleted",
+    actor_type: "client",
+    actor_name: client?.full_name ?? "Client",
+    title: "Pet deleted",
+    description: `${data.name} was moved to deleted pets.`,
+    metadata: {
+        name: data.name,
+        deleted_at: data.deleted_at,
+        deleted_by: data.deleted_by,
+    },
+    });
     revalidatePath("/client/pets");
     revalidatePath("/client/book");
 
@@ -67,6 +87,7 @@ export async function DELETE(
       { status: 500 },
     );
   }
+  
 }
 
 export async function PATCH(
@@ -108,6 +129,26 @@ export async function PATCH(
       success: true,
       pet: data,
       message: "Pet restored",
+    });
+    const { data: client } = await supabase
+        .from("clients")
+        .select("full_name")
+        .eq("id", data.client_id)
+        .maybeSingle();
+
+        await supabase.from("activity_logs").insert({
+        entity_type: "pets",
+        entity_id: data.id,
+        client_id: data.client_id,
+        action: "restored",
+        actor_type: "client",
+        actor_name: client?.full_name ?? "Client",
+        title: "Pet restored",
+        description: `${data.name} was restored to active pets.`,
+        metadata: {
+            name: data.name,
+            restored_at: new Date().toISOString(),
+        },
     });
   } catch (error) {
     return NextResponse.json(
