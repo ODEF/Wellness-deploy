@@ -13,13 +13,15 @@ type AdminActivityLogsProps = {
 };
 
 function formatDate(value: string) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("en-GB", {
     timeZone: "Asia/Tbilisi",
-    year: "numeric",
-    month: "short",
+    weekday: "short",
+    year: "2-digit",
+    month: "2-digit",
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
+    hour12: false,
   }).format(new Date(value));
 }
 
@@ -73,42 +75,65 @@ export default function AdminActivityLogs({
           </div>
         </header>
         <form className={styles.filters} method="get">
-        <label className={styles.filterField}>
-            <span>Client</span>
-            <select name="clientId" defaultValue={filters.clientId ?? ""}>
-            <option value="">All clients</option>
+  <label className={styles.filterField}>
+    <span>Client</span>
+    <select name="clientId" defaultValue={filters.clientId ?? ""}>
+      <option value="">All clients</option>
 
-            {clients.map((client) => (
-                <option value={client.id} key={client.id}>
-                {client.full_name}
-                </option>
-            ))}
-            </select>
-        </label>
+      {clients.map((client) => (
+        <option value={client.id} key={client.id}>
+          {client.full_name}
+        </option>
+      ))}
+    </select>
+  </label>
 
-        <label className={styles.filterField}>
-            <span>From time</span>
-            <input
-            type="time"
-            name="fromTime"
-            defaultValue={filters.fromTime ?? "13:00"}
-            />
-        </label>
+  <label className={styles.filterField}>
+    <span>From date</span>
+    <input
+      type="date"
+      name="fromDate"
+      defaultValue={filters.fromDate ?? ""}
+    />
+  </label>
 
-        <label className={styles.filterField}>
-            <span>To time</span>
-            <input
-            type="time"
-            name="toTime"
-            defaultValue={filters.toTime ?? "07:00"}
-            />
-        </label>
+  <label className={styles.filterField}>
+    <span>To date</span>
+    <input
+      type="date"
+      name="toDate"
+      defaultValue={filters.toDate ?? ""}
+    />
+  </label>
 
-        <div className={styles.filterActions}>
-            <button type="submit">Apply filters</button>
-            <Link href="/admin/activity">Clear</Link>
-        </div>
+  <label className={styles.filterField}>
+    <span>From time</span>
+    <input
+      type="time"
+      name="fromTime"
+      defaultValue={filters.fromTime ?? "13:00"}
+    />
+  </label>
+
+  <label className={styles.filterField}>
+    <span>To time</span>
+    <input
+      type="time"
+      name="toTime"
+      defaultValue={filters.toTime ?? "07:00"}
+    />
+  </label>
+
+  <div className={styles.filterActions}>
+    <button type="submit">Apply</button>
+    <Link href="/admin/activity">Clear</Link>
+  </div>
         </form>
+
+<p className={styles.filterSummary}>
+  Dates are selected from the calendar. Logs are displayed as DD/MM/YY using
+  Tbilisi time. For 13:00 → 07:00, the time filter works overnight.
+</p>
 
         <p className={styles.filterSummary}>
         Time filter uses Tbilisi time. For 13:00 → 07:00, logs are matched overnight.

@@ -7,6 +7,8 @@ export const dynamic = "force-dynamic";
 type AdminActivityPageProps = {
   searchParams: Promise<{
     clientId?: string;
+    fromDate?: string;
+    toDate?: string;
     fromTime?: string;
     toTime?: string;
   }>;

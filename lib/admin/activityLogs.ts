@@ -16,6 +16,8 @@ export type ActivityLog = {
 
 export type ActivityLogFilters = {
   clientId?: string;
+  fromDate?: string;
+  toDate?: string;
   fromTime?: string;
   toTime?: string;
 };
@@ -68,6 +70,43 @@ function getLogMinutesInTbilisi(createdAt: string) {
   return hour * 60 + minute;
 }
 
+function getLogDateKeyInTbilisi(createdAt: string) {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: LOG_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date(createdAt));
+
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  const day = parts.find((part) => part.type === "day")?.value;
+
+  return `${year}-${month}-${day}`;
+}
+
+function isInsideDateRange(
+  log: ActivityLog,
+  fromDate?: string,
+  toDate?: string,
+) {
+  if (!fromDate && !toDate) {
+    return true;
+  }
+
+  const logDate = getLogDateKeyInTbilisi(log.created_at);
+
+  if (fromDate && logDate < fromDate) {
+    return false;
+  }
+
+  if (toDate && logDate > toDate) {
+    return false;
+  }
+
+  return true;
+}
+
 function isInsideTimeRange(
   log: ActivityLog,
   fromTime?: string,
@@ -104,7 +143,7 @@ export async function getActivityLogs(
       "id, entity_type, entity_id, client_id, action, actor_type, actor_name, title, description, metadata, created_at",
     )
     .order("created_at", { ascending: false })
-    .limit(500);
+    .limit(1000);
 
   if (filters.clientId) {
     query = query.eq("client_id", filters.clientId);
@@ -117,7 +156,11 @@ export async function getActivityLogs(
     return [];
   }
 
-  return (data ?? []).filter((log) =>
-    isInsideTimeRange(log, filters.fromTime, filters.toTime),
-  );
+  return (data ?? [])
+    .filter((log) =>
+      isInsideDateRange(log, filters.fromDate, filters.toDate),
+    )
+    .filter((log) =>
+      isInsideTimeRange(log, filters.fromTime, filters.toTime),
+    );
 }
