@@ -1,71 +1,87 @@
 import Link from "next/link";
+import { type ClientAppointment } from "../../lib/clients/appointments";
+import { type AdminClient } from "../../lib/admin/clients";
+import { type ActivityLog } from "../../lib/admin/activityLogs";
 import AdminLayout from "./AdminLayout";
 import styles from "./AdminShell.module.css";
-const sidebarLinks = [
-  { label: "Dashboard", href: "/admin", active: true },
-  { label: "Appointments", href: "/admin" },
-  { label: "Clients", href: "/admin/clients" },
-  { label: "Services", href: "/admin" },
-  { label: "Bookings", href: "/admin" },
-  { label: "Payments", href: "/admin" },
-  { label: "Website Content", href: "/admin/content" },
-  { label: "Settings", href: "/admin" },
-];
-const stats = [
-  {
-    label: "Today Appointments",
-    value: "18",
-    change: "+12%",
-  },
-  {
-    label: "New Clients",
-    value: "247",
-    change: "+8%",
-  },
-  {
-    label: "Revenue",
-    value: "$14,850",
-    change: "+18%",
-  },
-  {
-    label: "Pending Requests",
-    value: "16",
-    change: "-4%",
-  },
-];
 
-const appointments = [
-  {
-    time: "09:00",
-    pet: "Mochi",
-    owner: "Sarah Kim",
-    service: "Full Groom",
-    status: "Confirmed",
-  },
-  {
-    time: "10:30",
-    pet: "Luna",
-    owner: "Emma Wilson",
-    service: "Bath & Blow Dry",
-    status: "In progress",
-  },
-  {
-    time: "12:00",
-    pet: "Charlie",
-    owner: "Daniel Carter",
-    service: "Vet Checkup",
-    status: "Pending",
-  },
-  {
-    time: "14:00",
-    pet: "Coco",
-    owner: "Sofia Bennett",
-    service: "Premium Spa",
-    status: "Confirmed",
-  },
-];
+type AdminShellProps = {
+  appointments: ClientAppointment[];
+  clients: AdminClient[];
+  activityLogs: ActivityLog[];
+};
 
-export default function AdminShell() {
+function getTodayDate() {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Tbilisi",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+}
+
+function getStatusClass(status: string) {
+  if (status === "Confirmed") {
+    return styles.confirmed;
+  }
+
+  if (status === "Pending") {
+    return styles.pending;
+  }
+
+  return styles.progress;
+}
+
+function formatActivityDate(value: string) {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Tbilisi",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(new Date(value));
+}
+
+export default function AdminShell({
+  appointments,
+  clients,
+  activityLogs,
+}: AdminShellProps) {
+  const today = getTodayDate();
+
+  const todayAppointments = appointments.filter(
+    (appointment) => appointment.appointment_date === today,
+  );
+
+  const pendingAppointments = appointments.filter(
+    (appointment) => appointment.status === "Pending",
+  );
+
+  const latestAppointments = appointments.slice(0, 5);
+  const latestActivityLogs = activityLogs.slice(0, 4);
+
+  const stats = [
+    {
+      label: "Today Appointments",
+      value: todayAppointments.length,
+      change: "Today",
+    },
+    {
+      label: "Total Clients",
+      value: clients.length,
+      change: "Profiles",
+    },
+    {
+      label: "Pending Requests",
+      value: pendingAppointments.length,
+      change: "Review",
+    },
+    {
+      label: "Activity Logs",
+      value: activityLogs.length,
+      change: "Events",
+    },
+  ];
+
   return (
     <AdminLayout
       activePage="Dashboard"
@@ -73,8 +89,13 @@ export default function AdminShell() {
       title="Appointments Management"
       actions={
         <>
-          <button className={styles.secondaryButton}>Export</button>
-          <button className={styles.primaryButton}>+ New Appointment</button>
+          <Link href="/admin/appointments" className={styles.secondaryButton}>
+            View Appointments
+          </Link>
+
+          <Link href="/client/book" className={styles.primaryButton}>
+            + New Appointment
+          </Link>
         </>
       }
     >
@@ -82,6 +103,7 @@ export default function AdminShell() {
         {stats.map((stat) => (
           <article className={styles.statCard} key={stat.label}>
             <p className={styles.statLabel}>{stat.label}</p>
+
             <div className={styles.statRow}>
               <h2>{stat.value}</h2>
               <span>{stat.change}</span>
@@ -94,45 +116,48 @@ export default function AdminShell() {
         <article className={styles.cardLarge}>
           <div className={styles.cardHeader}>
             <div>
-              <h2>Today’s Schedule</h2>
-              <p>Live appointment overview for the current day.</p>
+              <h2>Latest Appointments</h2>
+              <p>Live appointment overview from client bookings.</p>
             </div>
 
-            <button className={styles.lightButton}>View All</button>
+            <Link href="/admin/appointments" className={styles.lightButton}>
+              View All
+            </Link>
           </div>
 
-          <div className={styles.table}>
-            <div className={styles.tableHead}>
-              <span>Time</span>
-              <span>Pet</span>
-              <span>Owner</span>
-              <span>Service</span>
-              <span>Status</span>
+          {latestAppointments.length === 0 ? (
+            <div className={styles.emptyBox}>
+              <h3>No appointments yet</h3>
+              <p>Client bookings will appear here after they are created.</p>
             </div>
-
-            {appointments.map((appointment) => (
-              <div
-                className={styles.tableRow}
-                key={`${appointment.time}-${appointment.pet}`}
-              >
-                <span>{appointment.time}</span>
-                <strong>{appointment.pet}</strong>
-                <span>{appointment.owner}</span>
-                <span>{appointment.service}</span>
-                <span
-                  className={`${styles.status} ${
-                    appointment.status === "Confirmed"
-                      ? styles.confirmed
-                      : appointment.status === "In progress"
-                        ? styles.progress
-                        : styles.pending
-                  }`}
-                >
-                  {appointment.status}
-                </span>
+          ) : (
+            <div className={styles.table}>
+              <div className={styles.tableHead}>
+                <span>Date</span>
+                <span>Pet</span>
+                <span>Owner</span>
+                <span>Service</span>
+                <span>Status</span>
               </div>
-            ))}
-          </div>
+
+              {latestAppointments.map((appointment) => (
+                <div className={styles.tableRow} key={appointment.id}>
+                  <span>{appointment.appointment_date}</span>
+                  <strong>{appointment.pet_name}</strong>
+                  <span>{appointment.client_name}</span>
+                  <span>{appointment.service_name}</span>
+
+                  <span
+                    className={`${styles.status} ${getStatusClass(
+                      appointment.status,
+                    )}`}
+                  >
+                    {appointment.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </article>
 
         <aside className={styles.rightColumn}>
@@ -142,9 +167,17 @@ export default function AdminShell() {
             </div>
 
             <div className={styles.actionList}>
-              <button>Book appointment</button>
-              <button>Add client</button>
-              <button>Edit services</button>
+              <Link href="/client/book" className={styles.actionLink}>
+                Book appointment
+              </Link>
+
+              <Link href="/admin/clients" className={styles.actionLink}>
+                View clients
+              </Link>
+
+              <Link href="/admin/activity" className={styles.actionLink}>
+                View activity logs
+              </Link>
 
               <Link href="/admin/content" className={styles.actionLink}>
                 Update homepage
@@ -154,23 +187,26 @@ export default function AdminShell() {
 
           <article className={styles.smallCard}>
             <div className={styles.cardHeaderCompact}>
-              <h2>Upcoming</h2>
+              <h2>Recent Activity</h2>
             </div>
 
-            <div className={styles.timeline}>
-              <div>
-                <span>15:30</span>
-                <p>Training session — Max</p>
+            {latestActivityLogs.length === 0 ? (
+              <div className={styles.timeline}>
+                <div>
+                  <span>No logs</span>
+                  <p>Activity will appear here after client actions.</p>
+                </div>
               </div>
-              <div>
-                <span>16:00</span>
-                <p>Dog hotel check-in — Bella</p>
+            ) : (
+              <div className={styles.timeline}>
+                {latestActivityLogs.map((log) => (
+                  <div key={log.id}>
+                    <span>{formatActivityDate(log.created_at)}</span>
+                    <p>{log.title || `${log.entity_type} / ${log.action}`}</p>
+                  </div>
+                ))}
               </div>
-              <div>
-                <span>17:15</span>
-                <p>Nutrition consultation — Rocky</p>
-              </div>
-            </div>
+            )}
           </article>
         </aside>
       </section>
