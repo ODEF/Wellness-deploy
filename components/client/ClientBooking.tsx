@@ -4,20 +4,14 @@ import Link from "next/link";
 import { useState } from "react";
 import styles from "./ClientBooking.module.css";
 import {
+  type ClientBookingService,
+  fallbackBookingServices,
+} from "../../lib/clients/services";
+import {
   type ClientProfile,
   fallbackClientProfile,
 } from "../../lib/clients/profile";
 import { type ClientPet, fallbackClientPets } from "../../lib/clients/pets";
-
-
-const services = [
-  "Full Groom",
-  "Bath & Blow Dry",
-  "Vet Checkup",
-  "Dog Spa",
-  "Training Session",
-  "Nutrition Consultation",
-];
 
 const timeSlots = [
   "09:00 AM",
@@ -31,59 +25,67 @@ const timeSlots = [
 type ClientBookingProps = {
   profile?: ClientProfile;
   pets?: ClientPet[];
+  services?: ClientBookingService[];
 };
 
 export default function ClientBooking({
   profile = fallbackClientProfile,
   pets = fallbackClientPets,
+  services = fallbackBookingServices,
 }: ClientBookingProps) {
   const displayName = profile.full_name || fallbackClientProfile.full_name;
   const initial = displayName.charAt(0).toUpperCase();
+
   const petOptions = pets.length > 0 ? pets : fallbackClientPets;
+  const serviceOptions =
+    services.length > 0 ? services : fallbackBookingServices;
+
   const [selectedPet, setSelectedPet] = useState(petOptions[0]?.name ?? "");
-  const [selectedService, setSelectedService] = useState(services[0]);
+  const [selectedService, setSelectedService] = useState(
+    serviceOptions[0]?.name ?? "",
+  );
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState(timeSlots[1]);
   const [notes, setNotes] = useState("");
   const [status, setStatus] = useState<
     "Draft" | "Saving" | "Confirmed" | "Error"
-    >("Draft");
+  >("Draft");
 
-async function handleConfirm() {
-  if (!selectedDate) {
-    setStatus("Error");
-    return;
-  }
-
-  try {
-    setStatus("Saving");
-
-    const response = await fetch("/api/client/appointments", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        petName: selectedPet,
-        serviceName: selectedService,
-        appointmentDate: selectedDate,
-        appointmentTime: selectedTime,
-        notes,
-      }),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.error ?? "Failed to create appointment");
+  async function handleConfirm() {
+    if (!selectedDate || !selectedPet || !selectedService) {
+      setStatus("Error");
+      return;
     }
 
-    setStatus("Confirmed");
-  } catch (error) {
-    console.error(error);
-    setStatus("Error");
+    try {
+      setStatus("Saving");
+
+      const response = await fetch("/api/client/appointments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          petName: selectedPet,
+          serviceName: selectedService,
+          appointmentDate: selectedDate,
+          appointmentTime: selectedTime,
+          notes,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error ?? "Failed to create appointment");
+      }
+
+      setStatus("Confirmed");
+    } catch (error) {
+      console.error(error);
+      setStatus("Error");
+    }
   }
-}
 
   return (
     <main className={styles.page}>
@@ -104,10 +106,10 @@ async function handleConfirm() {
 
         <div className={styles.userBox}>
           <div className={styles.avatar}>{initial}</div>
-              <div>
-                <strong>{displayName}</strong>
-                <span>Client account</span>
-              </div>
+          <div>
+            <strong>{displayName}</strong>
+            <span>Client account</span>
+          </div>
         </div>
       </aside>
 
@@ -117,13 +119,13 @@ async function handleConfirm() {
             <p className={styles.breadcrumb}>Client / Book Appointment</p>
             <h1>Book an appointment</h1>
             <p>
-              Choose your pet, service, date, and time. Confirmation will later
-              be saved into Supabase.
+              Choose your pet, service, date, and time. The booking will be
+              saved into Supabase and reviewed from the admin panel.
             </p>
           </div>
 
-          <Link href="/client/book" className={styles.primaryButton}>
-            Book Appointment
+          <Link href="/client/appointments" className={styles.primaryButton}>
+            View Appointments
           </Link>
         </header>
 
@@ -142,10 +144,10 @@ async function handleConfirm() {
                   onChange={(event) => setSelectedPet(event.target.value)}
                 >
                   {petOptions.map((pet) => (
-                  <option key={pet.id} value={pet.name}>
-                    {pet.name}
-                  </option>
-                ))}
+                    <option key={pet.id} value={pet.name}>
+                      {pet.name}
+                    </option>
+                  ))}
                 </select>
               </label>
 
@@ -155,8 +157,12 @@ async function handleConfirm() {
                   value={selectedService}
                   onChange={(event) => setSelectedService(event.target.value)}
                 >
-                  {services.map((service) => (
-                    <option key={service}>{service}</option>
+                  {serviceOptions.map((service) => (
+                    <option key={service.id} value={service.name}>
+                      {service.name}
+                      {service.price ? ` — ${service.price}` : ""}
+                      {service.duration ? ` / ${service.duration}` : ""}
+                    </option>
                   ))}
                 </select>
               </label>
@@ -177,7 +183,9 @@ async function handleConfirm() {
                   onChange={(event) => setSelectedTime(event.target.value)}
                 >
                   {timeSlots.map((time) => (
-                    <option key={time}>{time}</option>
+                    <option key={time} value={time}>
+                      {time}
+                    </option>
                   ))}
                 </select>
               </label>
@@ -204,7 +212,7 @@ async function handleConfirm() {
                 disabled={status === "Saving"}
               >
                 {status === "Saving" ? "Saving..." : "Confirm Booking"}
-               </button>
+              </button>
             </div>
           </div>
 
@@ -217,12 +225,12 @@ async function handleConfirm() {
             <div className={styles.summaryCard}>
               <div>
                 <span>Pet</span>
-                <strong>{selectedPet}</strong>
+                <strong>{selectedPet || "Select pet"}</strong>
               </div>
 
               <div>
                 <span>Service</span>
-                <strong>{selectedService}</strong>
+                <strong>{selectedService || "Select service"}</strong>
               </div>
 
               <div>
@@ -243,18 +251,19 @@ async function handleConfirm() {
 
             {status === "Confirmed" && (
               <div className={styles.successBox}>
-                <h3>Booking prepared</h3>
+                <h3>Booking saved</h3>
                 <p>
-                  This is currently frontend-only. Next we will save this
-                  booking into Supabase and show it inside Appointments.
+                  Your appointment was saved. It will now appear in your
+                  appointments page and in the admin appointments panel.
                 </p>
               </div>
             )}
+
             {status === "Error" && (
-                <div className={styles.errorBox}>
-                    <h3>Booking was not saved</h3>
-                    <p>Please select a date and try again.</p>
-                </div>
+              <div className={styles.errorBox}>
+                <h3>Booking was not saved</h3>
+                <p>Please select a pet, service, date, and try again.</p>
+              </div>
             )}
           </aside>
         </section>
