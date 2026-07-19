@@ -4,6 +4,13 @@ export type AdminClient = {
   id: string;
   full_name: string;
   email: string | null;
+  phone: string | null;
+  address: string | null;
+  created_at: string;
+  updated_at: string | null;
+  pet_count: number;
+  appointment_count: number;
+  latest_activity_at: string | null;
 };
 
 function createSupabaseAdminClient() {
@@ -29,15 +36,54 @@ export async function getAdminClients(): Promise<AdminClient[]> {
     return [];
   }
 
-  const { data, error } = await supabase
+  const { data: clients, error: clientsError } = await supabase
     .from("clients")
-    .select("id, full_name, email")
-    .order("full_name", { ascending: true });
+    .select("id, full_name, email, phone, address, created_at, updated_at")
+    .order("created_at", { ascending: true });
 
-  if (error) {
-    console.error(error);
+  if (clientsError || !clients) {
+    console.error(clientsError);
     return [];
   }
 
-  return data ?? [];
+  const clientIds = clients.map((client) => client.id);
+  const clientNames = clients.map((client) => client.full_name);
+
+  const { data: pets } = await supabase
+    .from("pets")
+    .select("id, client_id")
+    .in("client_id", clientIds)
+    .is("deleted_at", null);
+
+  const { data: appointments } = await supabase
+    .from("appointments")
+    .select("id, client_name")
+    .in("client_name", clientNames);
+
+  const { data: activityLogs } = await supabase
+    .from("activity_logs")
+    .select("id, client_id, created_at")
+    .in("client_id", clientIds)
+    .order("created_at", { ascending: false });
+
+  return clients.map((client) => {
+    const petCount =
+      pets?.filter((pet) => pet.client_id === client.id).length ?? 0;
+
+    const appointmentCount =
+      appointments?.filter(
+        (appointment) => appointment.client_name === client.full_name,
+      ).length ?? 0;
+
+    const latestActivity =
+      activityLogs?.find((log) => log.client_id === client.id)?.created_at ??
+      null;
+
+    return {
+      ...client,
+      pet_count: petCount,
+      appointment_count: appointmentCount,
+      latest_activity_at: latestActivity,
+    };
+  });
 }

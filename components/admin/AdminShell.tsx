@@ -4,7 +4,7 @@ import styles from "./AdminShell.module.css";
 const sidebarLinks = [
   { label: "Dashboard", href: "/admin", active: true },
   { label: "Appointments", href: "/admin" },
-  { label: "Clients", href: "/admin" },
+  { label: "Clients", href: "/admin/clients" },
   { label: "Services", href: "/admin" },
   { label: "Bookings", href: "/admin" },
   { label: "Payments", href: "/admin" },

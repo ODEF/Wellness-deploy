@@ -10,14 +10,17 @@ import {
 import styles from "./ContentEditor.module.css";
 
 const sidebarLinks = [
-  { label: "Dashboard", href: "/admin", active: false },
-  { label: "Appointments", href: "/admin", active: false },
-  { label: "Clients", href: "/admin", active: false },
-  { label: "Services", href: "/admin", active: false },
-  { label: "Bookings", href: "/admin", active: false },
-  { label: "Payments", href: "/admin", active: false },
-  { label: "Website Content", href: "/admin/content", active: true },
-  { label: "Settings", href: "/admin", active: false },
+  { label: "Dashboard", href: "/admin", active: true },
+  { label: "Appointments", href: "/admin/appointments" },
+  { label: "Activity Logs", href: "/admin/activity" },
+  { label: "Website Content", href: "/admin/content" },
+
+  // Temporary links until these pages are fully built
+  { label: "Clients", href: "/admin/activity" },
+  { label: "Services", href: "/admin" },
+  { label: "Bookings", href: "/admin/appointments" },
+  { label: "Payments", href: "/admin" },
+  { label: "Settings", href: "/admin" },
 ];
 
 const sections = [

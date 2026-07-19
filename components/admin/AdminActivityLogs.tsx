@@ -44,14 +44,19 @@ export default function AdminActivityLogs({
 
         <nav className={styles.nav}>
           <Link href="/admin">Dashboard</Link>
-          <Link href="/admin/content">Website Content</Link>
           <Link href="/admin/appointments">Appointments</Link>
+
           <Link href="/admin/activity" className={styles.active}>
             Activity Logs
           </Link>
-          <Link href="/admin/clients">Clients</Link>
-          <Link href="/admin/services">Services</Link>
-          <Link href="/admin/settings">Settings</Link>
+
+          <Link href="/admin/content">Website Content</Link>
+
+          <Link href="/admin/activity">Clients</Link>
+          <Link href="/admin">Services</Link>
+          <Link href="/admin/appointments">Bookings</Link>
+          <Link href="/admin">Payments</Link>
+          <Link href="/admin">Settings</Link>
         </nav>
 
         <div className={styles.adminBox}>
