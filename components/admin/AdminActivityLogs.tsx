@@ -4,7 +4,7 @@ import {
   type ActivityLogFilters,
 } from "../../lib/admin/activityLogs";
 import { type AdminClient } from "../../lib/admin/clients";
-import "./AdminShell.module.css"
+import AdminLayout from "./AdminLayout";
 import styles from "./AdminActivityLogs.module.css";
 
 type AdminActivityLogsProps = {
@@ -36,62 +36,23 @@ export default function AdminActivityLogs({
   filters,
 }: AdminActivityLogsProps) {
   return (
-    <main className={styles.page}>
-      <aside className={styles.sidebar}>
-        <Link href="/admin" className={styles.logo}>
-          <span className={styles.logoMark}>A</span>
-          <span>Admin Panel</span>
-        </Link>
+    <AdminLayout
+      activePage="Activity Logs"
+      breadcrumb="Admin / Activity Logs"
+      title="Activity Logs"
+    >
+      <form className={styles.filters} method="get">
+        <label className={styles.filterField}>
+          <span>Client</span>
+          <select name="clientId" defaultValue={filters.clientId ?? ""}>
+            <option value="">All clients</option>
 
-        <nav className={styles.nav}>
-          <Link href="/admin">Dashboard</Link>
-          <Link href="/admin/appointments">Appointments</Link>
-
-          <Link href="/admin/activity" className={styles.active}>
-            Activity Logs
-          </Link>
-
-          <Link href="/admin/content">Website Content</Link>
-
-          <Link href="/admin/clients">Clients</Link>
-          <Link href="/admin">Services</Link>
-          <Link href="/admin/appointments">Bookings</Link>
-          <Link href="/admin">Payments</Link>
-          <Link href="/admin">Settings</Link>
-        </nav>
-
-        <div className={styles.adminBox}>
-          <div className={styles.avatar}>N</div>
-          <div>
-            <strong>Nata</strong>
-            <span>Administrator</span>
-          </div>
-        </div>
-      </aside>
-
-      <section className={styles.main}>
-        <header className={styles.topbar}>
-          <div>
-            <p className={styles.breadcrumb}>Admin / Activity Logs</p>
-            <h1>Activity Logs</h1>
-            <p>
-              Review client and system actions across pets, appointments,
-              services, payments, and orders.
-            </p>
-          </div>
-        </header>
-        <form className={styles.filters} method="get">
-      <label className={styles.filterField}>
-        <span>Client</span>
-        <select name="clientId" defaultValue={filters.clientId ?? ""}>
-          <option value="">All clients</option>
-
-          {clients.map((client) => (
-            <option value={client.id} key={client.id}>
-              {client.full_name}
-            </option>
-          ))}
-        </select>
+            {clients.map((client) => (
+              <option value={client.id} key={client.id}>
+                {client.full_name}
+              </option>
+            ))}
+          </select>
         </label>
 
         <label className={styles.filterField}>
@@ -136,65 +97,58 @@ export default function AdminActivityLogs({
         </div>
       </form>
 
-        <p className={styles.filterSummary}>
-          Dates are selected from the calendar. Logs are displayed as DD/MM/YY using
-          Tbilisi time. For 13:00 → 07:00, the time filter works overnight.
-        </p>
+      <p className={styles.filterSummary}>
+        Dates are selected from the calendar. Logs are displayed as DD/MM/YY
+        using Tbilisi time.
+      </p>
 
-        <p className={styles.filterSummary}>
-        Time filter uses Tbilisi time. For 13:00 → 07:00, logs are matched overnight.
-        </p>
-        <section className={styles.panel}>
-          <div className={styles.panelHeader}>
-            <div>
-              <p className={styles.eyebrow}>Latest events</p>
-              <h2>System activity history</h2>
-            </div>
-
-            <span>{logs.length} records</span>
+      <section className={styles.panel}>
+        <div className={styles.panelHeader}>
+          <div>
+            <p className={styles.eyebrow}>Latest events</p>
+            <h2>System activity history</h2>
           </div>
 
-          {logs.length === 0 ? (
-            <div className={styles.emptyBox}>
-              <h2>No activity yet</h2>
-              <p>
-                New appointments, pet changes, payments, and service changes
-                will appear here.
-              </p>
-            </div>
-          ) : (
-            <div className={styles.timeline}>
-              {logs.map((log) => (
-                <article className={styles.logCard} key={log.id}>
-                  <div className={styles.logMarker} />
+          <span>{logs.length} records</span>
+        </div>
 
-                  <div className={styles.logBody}>
-                    <div className={styles.logTop}>
-                      <div>
-                        <span className={styles.tag}>
-                          {getActionLabel(log)}
-                        </span>
+        {logs.length === 0 ? (
+          <div className={styles.emptyBox}>
+            <h2>No activity yet</h2>
+            <p>
+              New appointments, pet changes, payments, and service changes will
+              appear here.
+            </p>
+          </div>
+        ) : (
+          <div className={styles.timeline}>
+            {logs.map((log) => (
+              <article className={styles.logCard} key={log.id}>
+                <div className={styles.logMarker} />
 
-                        <h3>{log.title || "Activity recorded"}</h3>
-                      </div>
-
-                      <time>{formatDate(log.created_at)}</time>
+                <div className={styles.logBody}>
+                  <div className={styles.logTop}>
+                    <div>
+                      <span className={styles.tag}>{getActionLabel(log)}</span>
+                      <h3>{log.title || "Activity recorded"}</h3>
                     </div>
 
-                    <p>{log.description || "No description provided."}</p>
-
-                    <div className={styles.logMeta}>
-                      <span>Actor: {log.actor_name || "Unknown"}</span>
-                      <span>Type: {log.actor_type}</span>
-                      <span>Entity: {log.entity_type}</span>
-                    </div>
+                    <time>{formatDate(log.created_at)}</time>
                   </div>
-                </article>
-              ))}
-            </div>
-          )}
-        </section>
+
+                  <p>{log.description || "No description provided."}</p>
+
+                  <div className={styles.logMeta}>
+                    <span>Actor: {log.actor_name || "Unknown"}</span>
+                    <span>Type: {log.actor_type}</span>
+                    <span>Entity: {log.entity_type}</span>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
-    </main>
+    </AdminLayout>
   );
 }

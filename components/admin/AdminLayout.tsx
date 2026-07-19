@@ -6,10 +6,10 @@ type AdminPage =
   | "Appointments"
   | "Clients"
   | "Activity Logs"
-  | "Website Content"
   | "Services"
   | "Bookings"
   | "Payments"
+  | "Website Content"
   | "Settings";
 
 type AdminLayoutProps = {
