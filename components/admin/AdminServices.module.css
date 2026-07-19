@@ -1,0 +1,188 @@
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 22px;
+}
+
+.panel {
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 27, 45, 0.06);
+  border: 1px solid #edf0f3;
+  padding: 24px;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.panelHeader h2 {
+  margin: 0;
+  color: #172033;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.panelHeader span {
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.emptyBox {
+  border-radius: 16px;
+  background: #f8fafc;
+  padding: 28px;
+  text-align: center;
+}
+
+.emptyBox h2 {
+  margin: 0 0 8px;
+  color: #172033;
+  font-size: 20px;
+}
+
+.emptyBox p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.serviceList {
+  display: grid;
+  gap: 12px;
+}
+
+.serviceCard {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  border: 1px solid #edf0f3;
+  border-radius: 16px;
+  background: #f8fafc;
+  padding: 16px;
+}
+
+.serviceTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.serviceTop strong {
+  color: #172033;
+  font-size: 15px;
+}
+
+.serviceCard p {
+  margin: 0 0 12px;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.meta span,
+.activeBadge,
+.inactiveBadge {
+  width: fit-content;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.meta span {
+  background: #ffffff;
+  color: #374151;
+  border: 1px solid #edf0f3;
+}
+
+.activeBadge {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.inactiveBadge {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.serviceCard button {
+  align-self: flex-start;
+  min-height: 36px;
+  border: 0;
+  border-radius: 10px;
+  background: #f5a524;
+  color: #172033;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 0 14px;
+}
+
+.serviceCard button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+}
+
+.form label {
+  display: grid;
+  gap: 8px;
+}
+
+.form span {
+  color: #374151;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.form input,
+.form textarea {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #172033;
+  font: inherit;
+  padding: 12px 13px;
+  outline: none;
+}
+
+.form textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .serviceCard {
+    flex-direction: column;
+  }
+}
