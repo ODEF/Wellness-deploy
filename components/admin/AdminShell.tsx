@@ -1,6 +1,6 @@
 import Link from "next/link";
+import AdminLayout from "./AdminLayout";
 import styles from "./AdminShell.module.css";
-
 const sidebarLinks = [
   { label: "Dashboard", href: "/admin", active: true },
   { label: "Appointments", href: "/admin" },
@@ -67,139 +67,113 @@ const appointments = [
 
 export default function AdminShell() {
   return (
-    <div className={styles.adminPage}>
-      <aside className={styles.sidebar}>
-        <Link href="/admin" className={styles.logo}>
-          <span className={styles.logoMark}>♥</span>
-          <span>PetDash</span>
-        </Link>
+    <AdminLayout
+      activePage="Dashboard"
+      breadcrumb="Admin / Dashboard"
+      title="Appointments Management"
+      actions={
+        <>
+          <button className={styles.secondaryButton}>Export</button>
+          <button className={styles.primaryButton}>+ New Appointment</button>
+        </>
+      }
+    >
+      <section className={styles.statsGrid}>
+        {stats.map((stat) => (
+          <article className={styles.statCard} key={stat.label}>
+            <p className={styles.statLabel}>{stat.label}</p>
+            <div className={styles.statRow}>
+              <h2>{stat.value}</h2>
+              <span>{stat.change}</span>
+            </div>
+          </article>
+        ))}
+      </section>
 
-        <nav className={styles.nav}>
-          {sidebarLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className={`${styles.navLink} ${link.active ? styles.active : ""}`}
-            >
-              <span className={styles.navDot} />
-              <span>{link.label}</span>
-            </Link>
-          ))}
-        </nav>
-
-        <div className={styles.sidebarFooter}>
-          <p>Dogs Wellness Co.</p>
-          <span>Admin panel</span>
-        </div>
-      </aside>
-
-      <main className={styles.main}>
-        <header className={styles.topbar}>
-          <div>
-            <p className={styles.breadcrumb}>Admin / Dashboard</p>
-            <h1 className={styles.pageTitle}>Appointments Management</h1>
-          </div>
-
-          <div className={styles.topbarActions}>
-            <button className={styles.secondaryButton}>Export</button>
-            <button className={styles.primaryButton}>+ New Appointment</button>
-            <div className={styles.avatar}>N</div>
-          </div>
-        </header>
-
-        <section className={styles.statsGrid}>
-          {stats.map((stat) => (
-            <article className={styles.statCard} key={stat.label}>
-              <p className={styles.statLabel}>{stat.label}</p>
-              <div className={styles.statRow}>
-                <h2>{stat.value}</h2>
-                <span>{stat.change}</span>
-              </div>
-            </article>
-          ))}
-        </section>
-
-        <section className={styles.contentGrid}>
-          <article className={styles.cardLarge}>
-            <div className={styles.cardHeader}>
-              <div>
-                <h2>Today’s Schedule</h2>
-                <p>Live appointment overview for the current day.</p>
-              </div>
-
-              <button className={styles.lightButton}>View All</button>
+      <section className={styles.contentGrid}>
+        <article className={styles.cardLarge}>
+          <div className={styles.cardHeader}>
+            <div>
+              <h2>Today’s Schedule</h2>
+              <p>Live appointment overview for the current day.</p>
             </div>
 
-            <div className={styles.table}>
-              <div className={styles.tableHead}>
-                <span>Time</span>
-                <span>Pet</span>
-                <span>Owner</span>
-                <span>Service</span>
-                <span>Status</span>
-              </div>
+            <button className={styles.lightButton}>View All</button>
+          </div>
 
-              {appointments.map((appointment) => (
-                <div className={styles.tableRow} key={`${appointment.time}-${appointment.pet}`}>
-                  <span>{appointment.time}</span>
-                  <strong>{appointment.pet}</strong>
-                  <span>{appointment.owner}</span>
-                  <span>{appointment.service}</span>
-                  <span
-                    className={`${styles.status} ${
-                      appointment.status === "Confirmed"
-                        ? styles.confirmed
-                        : appointment.status === "In progress"
-                          ? styles.progress
-                          : styles.pending
-                    }`}
-                  >
-                    {appointment.status}
-                  </span>
-                </div>
-              ))}
+          <div className={styles.table}>
+            <div className={styles.tableHead}>
+              <span>Time</span>
+              <span>Pet</span>
+              <span>Owner</span>
+              <span>Service</span>
+              <span>Status</span>
+            </div>
+
+            {appointments.map((appointment) => (
+              <div
+                className={styles.tableRow}
+                key={`${appointment.time}-${appointment.pet}`}
+              >
+                <span>{appointment.time}</span>
+                <strong>{appointment.pet}</strong>
+                <span>{appointment.owner}</span>
+                <span>{appointment.service}</span>
+                <span
+                  className={`${styles.status} ${
+                    appointment.status === "Confirmed"
+                      ? styles.confirmed
+                      : appointment.status === "In progress"
+                        ? styles.progress
+                        : styles.pending
+                  }`}
+                >
+                  {appointment.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <aside className={styles.rightColumn}>
+          <article className={styles.smallCard}>
+            <div className={styles.cardHeaderCompact}>
+              <h2>Quick Actions</h2>
+            </div>
+
+            <div className={styles.actionList}>
+              <button>Book appointment</button>
+              <button>Add client</button>
+              <button>Edit services</button>
+
+              <Link href="/admin/content" className={styles.actionLink}>
+                Update homepage
+              </Link>
             </div>
           </article>
 
-          <aside className={styles.rightColumn}>
-            <article className={styles.smallCard}>
-              <div className={styles.cardHeaderCompact}>
-                <h2>Quick Actions</h2>
-              </div>
+          <article className={styles.smallCard}>
+            <div className={styles.cardHeaderCompact}>
+              <h2>Upcoming</h2>
+            </div>
 
-              <div className={styles.actionList}>
-                <button>Book appointment</button>
-                <button>Add client</button>
-                <button>Edit services</button>
-                <Link href="/admin/content" className={styles.actionLink}>
-                     Update homepage
-                </Link>
+            <div className={styles.timeline}>
+              <div>
+                <span>15:30</span>
+                <p>Training session — Max</p>
               </div>
-            </article>
-
-            <article className={styles.smallCard}>
-              <div className={styles.cardHeaderCompact}>
-                <h2>Upcoming</h2>
+              <div>
+                <span>16:00</span>
+                <p>Dog hotel check-in — Bella</p>
               </div>
-
-              <div className={styles.timeline}>
-                <div>
-                  <span>15:30</span>
-                  <p>Training session — Max</p>
-                </div>
-                <div>
-                  <span>16:00</span>
-                  <p>Dog hotel check-in — Bella</p>
-                </div>
-                <div>
-                  <span>17:15</span>
-                  <p>Nutrition consultation — Rocky</p>
-                </div>
+              <div>
+                <span>17:15</span>
+                <p>Nutrition consultation — Rocky</p>
               </div>
-            </article>
-          </aside>
-        </section>
-      </main>
-    </div>
+            </div>
+          </article>
+        </aside>
+      </section>
+    </AdminLayout>
   );
 }
