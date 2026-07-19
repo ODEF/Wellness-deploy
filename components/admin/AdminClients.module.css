@@ -261,13 +261,12 @@
 }
 
 @media (max-width: 1100px) {
-  .tableHeader,
-  .tableRow {
-    grid-template-columns: 1fr;
-  }
-
   .tableHeader {
     display: none;
+  }
+
+  .tableRow {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -288,4 +287,4 @@
   .panelHeader {
     flex-direction: column;
   }
-}   
+}
