@@ -27,7 +27,7 @@ const sidebarLinks: { label: AdminPage; href: string }[] = [
   { label: "Appointments", href: "/admin/appointments" },
   { label: "Clients", href: "/admin/clients" },
   { label: "Activity Logs", href: "/admin/activity" },
-  { label: "Services", href: "/admin" },
+  { label: "Services", href: "/admin/services" },
   { label: "Bookings", href: "/admin/appointments" },
   { label: "Payments", href: "/admin" },
   { label: "Website Content", href: "/admin/content" },
