@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { type AdminClient } from "../../lib/admin/clients";
+import  "./AdminShell.module.css";
 import styles from "./AdminClients.module.css";
+
 
 type AdminClientsProps = {
   clients: AdminClient[];
