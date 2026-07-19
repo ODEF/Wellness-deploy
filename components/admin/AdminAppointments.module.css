@@ -1,46 +1,4 @@
-.page {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  background: #f6f7fb;
-  color: #172033;
-}
 
-.sidebar {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  gap: 26px;
-  background: #111827;
-  padding: 26px 18px;
-}
-
-.logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 16px;
-  font-weight: 900;
-}
-
-.logoMark {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  background: #f5a524;
-  color: #111827;
-  font-size: 13px;
-  font-weight: 900;
-}
-
-.nav {
-  display: grid;
-  gap: 6px;
-}
 
 .nav a {
   min-height: 42px;
@@ -60,27 +18,7 @@
   color: #ffffff;
 }
 
-.adminBox {
-  margin-top: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.08);
-}
 
-.avatar {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 999px;
-  background: #f5a524;
-  color: #111827;
-  font-size: 13px;
-  font-weight: 900;
-}
 
 .adminBox strong {
   display: block;
@@ -95,20 +33,7 @@
   font-weight: 700;
 }
 
-.main {
-  min-width: 0;
-  padding: 28px;
-}
 
-.topbar {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 22px;
-  margin-bottom: 24px;
-}
-
-.breadcrumb,
 .eyebrow {
   margin: 0 0 8px;
   color: #f5a524;
