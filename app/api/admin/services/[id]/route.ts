@@ -67,9 +67,10 @@ export async function PATCH(
       },
     });
 
+    revalidatePath("/");
+    revalidatePath("/client/book");
     revalidatePath("/admin/services");
     revalidatePath("/admin/activity");
-
     return NextResponse.json({
       success: true,
       service: data,

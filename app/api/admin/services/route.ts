@@ -92,6 +92,8 @@ export async function POST(request: Request) {
       },
     });
 
+    revalidatePath("/");
+    revalidatePath("/client/book");
     revalidatePath("/admin/services");
     revalidatePath("/admin/activity");
 
