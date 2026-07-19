@@ -32,6 +32,9 @@ export default function AdminClients({ clients }: AdminClientsProps) {
     (sum, client) => sum + client.appointment_count,
     0,
   );
+  const clientsWithActivity = clients.filter(
+    (client) => client.latest_activity_at,
+  ).length;
 
   return (
     <AdminLayout
@@ -65,11 +68,11 @@ export default function AdminClients({ clients }: AdminClientsProps) {
         </article>
 
         <article className={shellStyles.statCard}>
-          <p className={shellStyles.statLabel}>Activity</p>
-          <div className={shellStyles.statRow}>
-            <h2>{clients.length > 0 ? "Live" : "0"}</h2>
-            <span>Logs</span>
-          </div>
+            <p className={shellStyles.statLabel}>Clients with activity</p>
+            <div className={shellStyles.statRow}>
+                <h2>{clientsWithActivity}</h2>
+                <span>Logs</span>
+            </div>
         </article>
       </section>
 
@@ -116,7 +119,7 @@ export default function AdminClients({ clients }: AdminClientsProps) {
                 <span>{formatDate(client.latest_activity_at)}</span>
 
                 <div className={styles.actions}>
-                  <Link href={`/admin/client/activity?clientId=${client.id}`}>
+                  <Link href={`/admin/activity?clientId=${client.id}`}>
                     View logs
                   </Link>
                 </div>
