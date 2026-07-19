@@ -52,7 +52,7 @@ export default function AdminActivityLogs({
 
           <Link href="/admin/content">Website Content</Link>
 
-          <Link href="/admin/activity">Clients</Link>
+          <Link href="/admin/clients">Clients</Link>
           <Link href="/admin">Services</Link>
           <Link href="/admin/appointments">Bookings</Link>
           <Link href="/admin">Payments</Link>
