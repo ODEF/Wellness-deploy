@@ -23,14 +23,12 @@ type AdminLayoutProps = {
 const sidebarLinks: { label: AdminPage; href: string }[] = [
   { label: "Dashboard", href: "/admin" },
   { label: "Appointments", href: "/admin/appointments" },
-  { label: "Clients", href: "/admin/client" },
+  { label: "Clients", href: "/admin/clients" },
   { label: "Activity Logs", href: "/admin/activity" },
-  { label: "Website Content", href: "/admin/content" },
-
-  // Later pages
   { label: "Services", href: "/admin" },
   { label: "Bookings", href: "/admin/appointments" },
   { label: "Payments", href: "/admin" },
+  { label: "Website Content", href: "/admin/content" },
   { label: "Settings", href: "/admin" },
 ];
 
