@@ -16,7 +16,7 @@ const sidebarLinks = [
   { label: "Website Content", href: "/admin/content" },
 
   // Temporary links until these pages are fully built
-  { label: "Clients", href: "/admin/activity" },
+  { label: "Clients", href: "/admin/clients" },
   { label: "Services", href: "/admin" },
   { label: "Bookings", href: "/admin/appointments" },
   { label: "Payments", href: "/admin" },
