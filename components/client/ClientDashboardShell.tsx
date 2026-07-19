@@ -1,14 +1,14 @@
 import Link from "next/link";
 import styles from "./ClientDashboardShell.module.css";
-import { type ClientAppointment } from "../../lib/client/appointments";
+import { type ClientAppointment } from "../../lib/clients/appointments";
 import ClientSettingsForm from "./ClientSettingsForm";
 import {
   type ClientProfile,
   fallbackClientProfile,
-} from "../../lib/client/profile";
+} from "../../lib/clients/profile";
 
 import ClientPetsManager from "./ClientPetsManager";
-import { type ClientPet, fallbackClientPets } from "../../lib/client/pets";
+import { type ClientPet, fallbackClientPets } from "../../lib/clients/pets";
 
 
 type ClientPage =

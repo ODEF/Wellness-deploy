@@ -6,8 +6,8 @@ import styles from "./ClientBooking.module.css";
 import {
   type ClientProfile,
   fallbackClientProfile,
-} from "../../lib/client/profile";
-import { type ClientPet, fallbackClientPets } from "../../lib/client/pets";
+} from "../../lib/clients/profile";
+import { type ClientPet, fallbackClientPets } from "../../lib/clients/pets";
 
 
 const services = [

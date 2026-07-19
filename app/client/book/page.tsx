@@ -1,6 +1,6 @@
 import ClientBooking from "../../../components/client/ClientBooking";
-import { getClientProfile } from "../../../lib/client/profile";
-import { getClientPets } from "../../../lib/client/pets";
+import { getClientProfile } from "../../../lib/clients/profile";
+import { getClientPets } from "../../../lib/clients/pets";
 
 export const dynamic = "force-dynamic";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { type ClientPet } from "../../lib/client/pets";
+import { type ClientPet } from "../../lib/clients/pets";
 import styles from "./ClientDashboardShell.module.css";
 
 type ClientPetsManagerProps = {

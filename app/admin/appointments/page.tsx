@@ -1,5 +1,5 @@
 import AdminAppointments from "../../../components/admin/AdminAppointments";
-import { getClientAppointments } from "../../../lib/client/appointments";
+import { getClientAppointments } from "../../../lib/clients/appointments";
 
 export const dynamic = "force-dynamic";
 

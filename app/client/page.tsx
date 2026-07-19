@@ -1,5 +1,5 @@
 import ClientDashboardShell from "../../components/client/ClientDashboardShell";
-import { getClientProfile } from "../../lib/client/profile";
+import { getClientProfile } from "../../lib/clients/profile";
 
 export const dynamic = "force-dynamic";
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { type ClientAppointment } from "../../lib/client/appointments";
+import { type ClientAppointment } from "../../lib/clients/appointments";
 import styles from "./AdminAppointments.module.css";
 
 type AdminAppointmentsProps = {
