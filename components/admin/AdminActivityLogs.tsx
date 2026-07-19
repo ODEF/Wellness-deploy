@@ -4,6 +4,7 @@ import {
   type ActivityLogFilters,
 } from "../../lib/admin/activityLogs";
 import { type AdminClient } from "../../lib/admin/clients";
+import "./AdminShell.module.css"
 import styles from "./AdminActivityLogs.module.css";
 
 type AdminActivityLogsProps = {
