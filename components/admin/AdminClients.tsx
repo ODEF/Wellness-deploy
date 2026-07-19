@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { type AdminClient } from "../../lib/admin/clients";
-import  "./AdminShell.module.css";
+import AdminLayout from "./AdminLayout";
+import shellStyles from "./AdminShell.module.css";
 import styles from "./AdminClients.module.css";
-
 
 type AdminClientsProps = {
   clients: AdminClient[];
@@ -34,123 +34,97 @@ export default function AdminClients({ clients }: AdminClientsProps) {
   );
 
   return (
-    <main className={styles.page}>
-      <aside className={styles.sidebar}>
-        <Link href="/admin" className={styles.logo}>
-          <span className={styles.logoMark}>A</span>
-          <span>Admin Panel</span>
-        </Link>
-
-        <nav className={styles.nav}>
-          <Link href="/admin">Dashboard</Link>
-          <Link href="/admin/appointments">Appointments</Link>
-          <Link href="/admin/activity">Activity Logs</Link>
-          <Link href="/admin/content">Website Content</Link>
-
-          <Link href="/admin/client" className={styles.active}>
-            Clients
-          </Link>
-
-          <Link href="/admin">Services</Link>
-          <Link href="/admin/appointments">Bookings</Link>
-          <Link href="/admin">Payments</Link>
-          <Link href="/admin">Settings</Link>
-        </nav>
-
-        <div className={styles.adminBox}>
-          <div className={styles.avatar}>N</div>
-          <div>
-            <strong>Nata</strong>
-            <span>Administrator</span>
+    <AdminLayout
+      activePage="Clients"
+      breadcrumb="Admin / Clients"
+      title="Clients"
+    >
+      <section className={shellStyles.statsGrid}>
+        <article className={shellStyles.statCard}>
+          <p className={shellStyles.statLabel}>Total clients</p>
+          <div className={shellStyles.statRow}>
+            <h2>{clients.length}</h2>
+            <span>Profiles</span>
           </div>
-        </div>
-      </aside>
+        </article>
 
-      <section className={styles.main}>
-        <header className={styles.topbar}>
-          <div>
-            <p className={styles.breadcrumb}>Admin / Clients</p>
-            <h1>Clients</h1>
-            <p>
-              View client profiles, saved pets, appointment count, and activity
-              history.
-            </p>
+        <article className={shellStyles.statCard}>
+          <p className={shellStyles.statLabel}>Total pets</p>
+          <div className={shellStyles.statRow}>
+            <h2>{totalPets}</h2>
+            <span>Active</span>
           </div>
-        </header>
+        </article>
 
-        <section className={styles.statsGrid}>
-          <article className={styles.statCard}>
-            <span>Total clients</span>
-            <strong>{clients.length}</strong>
-            <p>registered profiles</p>
-          </article>
-
-          <article className={styles.statCard}>
-            <span>Total pets</span>
-            <strong>{totalPets}</strong>
-            <p>active saved pets</p>
-          </article>
-
-          <article className={styles.statCard}>
-            <span>Appointments</span>
-            <strong>{totalAppointments}</strong>
-            <p>booked by clients</p>
-          </article>
-        </section>
-
-        <section className={styles.panel}>
-          <div className={styles.panelHeader}>
-            <div>
-              <p className={styles.eyebrow}>Client records</p>
-              <h2>Registered Clients</h2>
-            </div>
-
-            <span>{clients.length} clients</span>
+        <article className={shellStyles.statCard}>
+          <p className={shellStyles.statLabel}>Appointments</p>
+          <div className={shellStyles.statRow}>
+            <h2>{totalAppointments}</h2>
+            <span>Booked</span>
           </div>
+        </article>
 
-          {clients.length === 0 ? (
-            <div className={styles.emptyBox}>
-              <h2>No clients yet</h2>
-              <p>Client profiles will appear here after they are created.</p>
-            </div>
-          ) : (
-            <div className={styles.table}>
-              <div className={styles.tableHeader}>
-                <span>Name</span>
-                <span>Contact</span>
-                <span>Pets</span>
-                <span>Appointments</span>
-                <span>Latest activity</span>
-                <span>Actions</span>
-              </div>
-
-              {clients.map((client) => (
-                <div className={styles.tableRow} key={client.id}>
-                  <div>
-                    <strong>{client.full_name}</strong>
-                    <p>{client.address || "No address"}</p>
-                  </div>
-
-                  <div>
-                    <span>{client.email || "No email"}</span>
-                    <p>{client.phone || "No phone"}</p>
-                  </div>
-
-                  <span>{client.pet_count}</span>
-                  <span>{client.appointment_count}</span>
-                  <span>{formatDate(client.latest_activity_at)}</span>
-
-                  <div className={styles.actions}>
-                    <Link href={`/admin/activity?clientId=${client.id}`}>
-                      View logs
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
+        <article className={shellStyles.statCard}>
+          <p className={shellStyles.statLabel}>Activity</p>
+          <div className={shellStyles.statRow}>
+            <h2>{clients.length > 0 ? "Live" : "0"}</h2>
+            <span>Logs</span>
+          </div>
+        </article>
       </section>
-    </main>
+
+      <section className={styles.panel}>
+        <div className={styles.panelHeader}>
+          <div>
+            <p className={styles.eyebrow}>Client records</p>
+            <h2>Registered Clients</h2>
+          </div>
+
+          <span>{clients.length} clients</span>
+        </div>
+
+        {clients.length === 0 ? (
+          <div className={styles.emptyBox}>
+            <h2>No clients yet</h2>
+            <p>Client profiles will appear here after they are created.</p>
+          </div>
+        ) : (
+          <div className={styles.table}>
+            <div className={styles.tableHeader}>
+              <span>Name</span>
+              <span>Contact</span>
+              <span>Pets</span>
+              <span>Appointments</span>
+              <span>Latest activity</span>
+              <span>Actions</span>
+            </div>
+
+            {clients.map((client) => (
+              <div className={styles.tableRow} key={client.id}>
+                <div>
+                  <strong>{client.full_name}</strong>
+                  <p>{client.address || "No address"}</p>
+                </div>
+
+                <div>
+                  <span>{client.email || "No email"}</span>
+                  <p>{client.phone || "No phone"}</p>
+                </div>
+
+                <span>{client.pet_count}</span>
+                <span>{client.appointment_count}</span>
+                <span>{formatDate(client.latest_activity_at)}</span>
+
+                <div className={styles.actions}>
+                  <Link href={`/admin/client/activity?clientId=${client.id}`}>
+                    View logs
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    </AdminLayout>
   );
 }
