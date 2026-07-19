@@ -1,5 +1,5 @@
 "use client";
-
+import AdminLayout from "./AdminLayout";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
@@ -9,19 +9,6 @@ import {
 } from "../../lib/home/homeContent";
 import styles from "./ContentEditor.module.css";
 
-const sidebarLinks = [
-  { label: "Dashboard", href: "/admin", active: true },
-  { label: "Appointments", href: "/admin/appointments" },
-  { label: "Activity Logs", href: "/admin/activity" },
-  { label: "Website Content", href: "/admin/content" },
-
-  // Temporary links until these pages are fully built
-  { label: "Clients", href: "/admin/clients" },
-  { label: "Services", href: "/admin" },
-  { label: "Bookings", href: "/admin/appointments" },
-  { label: "Payments", href: "/admin" },
-  { label: "Settings", href: "/admin" },
-];
 
 const sections = [
   "Hero",
@@ -516,54 +503,27 @@ const [finalCtaDraft, setFinalCtaDraft] =
   }
 
   return (
-    <div className={styles.adminPage}>
-      <aside className={styles.sidebar}>
-        <Link href="/admin" className={styles.logo}>
-          <span className={styles.logoMark}>♥</span>
-          <span>PetDash</span>
+    <AdminLayout
+      activePage="Website Content"
+      breadcrumb="Admin / Website Content"
+      title="Homepage Content Editor"
+      actions={
+      <>
+        <Link href="/" className={styles.secondaryButton}>
+          Preview Website
         </Link>
 
-        <nav className={styles.nav}>
-          {sidebarLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className={`${styles.navLink} ${link.active ? styles.active : ""}`}
-            >
-              <span className={styles.navDot} />
-              <span>{link.label}</span>
-            </Link>
-          ))}
-        </nav>
-
-        <div className={styles.sidebarFooter}>
-          <p>Dogs Wellness Co.</p>
-          <span>Admin panel</span>
-        </div>
-      </aside>
-
-      <main className={styles.main}>
-        <header className={styles.topbar}>
-          <div>
-            <p className={styles.breadcrumb}>Admin / Website Content</p>
-            <h1 className={styles.pageTitle}>Homepage Content Editor</h1>
-          </div>
-
-          <div className={styles.topbarActions}>
-            <Link href="/" className={styles.secondaryButton}>
-              Preview Website
-            </Link>
-
-            <button
-              className={styles.primaryButton}
-              onClick={handleSave}
-              disabled={status === "Loading" || status === "Saving"}
-            >
-              {status === "Saving" ? "Saving..." : "Save Changes"}
-            </button>
-          </div>
-        </header>
-
+        <button
+          className={styles.primaryButton}
+          onClick={handleSave}
+          disabled={status === "Loading" || status === "Saving"}
+        >
+          {status === "Saving" ? "Saving..." : "Save Changes"}
+        </button>
+      </>
+    }
+    >
+      
         <section className={styles.editorGrid}>
           <aside className={styles.sectionsPanel}>
             <h2>Page Sections</h2>
@@ -1562,7 +1522,7 @@ const [finalCtaDraft, setFinalCtaDraft] =
                 </p>
             </aside>
         </section>
-      </main>
-    </div>
+
+    </AdminLayout>
   );
 }

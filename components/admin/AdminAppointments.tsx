@@ -1,26 +1,23 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { type ClientAppointment } from "../../lib/clients/appointments";
+import AdminLayout from "./AdminLayout";
+import shellStyles from "./AdminShell.module.css";
 import styles from "./AdminAppointments.module.css";
 
 type AdminAppointmentsProps = {
   appointments: ClientAppointment[];
 };
 
-function getStatusClass(status: string) {
-  if (status === "Pending") {
-    return styles.pending;
-  }
-
-  if (status === "Confirmed") {
-    return styles.confirmed;
-  }
-
-  return styles.completed;
-}
-
 export default function AdminAppointments({
   appointments,
 }: AdminAppointmentsProps) {
+  const router = useRouter();
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
+
   const pendingCount = appointments.filter(
     (appointment) => appointment.status === "Pending",
   ).length;
@@ -33,198 +30,130 @@ export default function AdminAppointments({
     (appointment) => appointment.status === "Completed",
   ).length;
 
-  const nextAppointment = appointments[0];
+  async function updateStatus(id: string, status: string) {
+    setUpdatingId(id);
 
-  const stats = [
-    {
-      label: "Total",
-      value: String(appointments.length),
-      detail: "saved bookings",
-    },
-    {
-      label: "Pending",
-      value: String(pendingCount),
-      detail: "need review",
-    },
-    {
-      label: "Confirmed",
-      value: String(confirmedCount),
-      detail: "approved visits",
-    },
-    {
-      label: "Completed",
-      value: String(completedCount),
-      detail: "finished visits",
-    },
-  ];
+    try {
+      await fetch(`/api/admin/appointments/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      router.refresh();
+    } finally {
+      setUpdatingId(null);
+    }
+  }
 
   return (
-    <main className={styles.page}>
-      <aside className={styles.sidebar}>
-        <Link href="/admin" className={styles.logo}>
-          <span className={styles.logoMark}>A</span>
-          <span>Admin Panel</span>
+    <AdminLayout
+      activePage="Appointments"
+      breadcrumb="Admin / Appointments"
+      title="Appointments"
+      actions={
+        <Link href="/client/book" className={shellStyles.primaryButton}>
+          + New Appointment
         </Link>
-
-        <nav className={styles.nav}>
-          <Link href="/admin">Dashboard</Link>
-
-          <Link href="/admin/appointments" className={styles.active}>
-            Appointments
-          </Link>
-
-          <Link href="/admin/activity">Activity Logs</Link>
-          <Link href="/admin/content">Website Content</Link>
-
-          <Link href="/admin/activity">Clients</Link>
-          <Link href="/admin">Services</Link>
-          <Link href="/admin/appointments">Bookings</Link>
-          <Link href="/admin">Payments</Link>
-          <Link href="/admin">Settings</Link>
-        </nav>
-
-        <div className={styles.adminBox}>
-          <div className={styles.avatar}>N</div>
-          <div>
-            <strong>Nata</strong>
-            <span>Administrator</span>
+      }
+    >
+      <section className={shellStyles.statsGrid}>
+        <article className={shellStyles.statCard}>
+          <p className={shellStyles.statLabel}>Total appointments</p>
+          <div className={shellStyles.statRow}>
+            <h2>{appointments.length}</h2>
+            <span>All</span>
           </div>
-        </div>
-      </aside>
+        </article>
 
-      <section className={styles.main}>
-        <header className={styles.topbar}>
-          <div>
-            <p className={styles.breadcrumb}>Admin / Appointments</p>
-            <h1>Appointments</h1>
-            <p>
-              Review client appointment requests, service details, dates, and
-              current booking statuses.
-            </p>
+        <article className={shellStyles.statCard}>
+          <p className={shellStyles.statLabel}>Pending</p>
+          <div className={shellStyles.statRow}>
+            <h2>{pendingCount}</h2>
+            <span>Review</span>
           </div>
+        </article>
 
-          <button type="button" className={styles.primaryButton}>
-            Add Appointment
-          </button>
-        </header>
-
-        <section className={styles.statsGrid}>
-          {stats.map((stat) => (
-            <article className={styles.statCard} key={stat.label}>
-              <span>{stat.label}</span>
-              <strong>{stat.value}</strong>
-              <p>{stat.detail}</p>
-            </article>
-          ))}
-        </section>
-
-        <section className={styles.contentGrid}>
-          <div className={styles.panel}>
-            <div className={styles.panelHeader}>
-              <div>
-                <p className={styles.eyebrow}>Booking queue</p>
-                <h2>Appointment requests</h2>
-              </div>
-
-              <div className={styles.filterGroup}>
-                <button type="button">All</button>
-                <button type="button">Pending</button>
-                <button type="button">Confirmed</button>
-              </div>
-            </div>
-
-            {appointments.length === 0 ? (
-              <div className={styles.emptyBox}>
-                <h2>No appointments yet</h2>
-                <p>Client bookings from /client/book will appear here.</p>
-              </div>
-            ) : (
-              <div className={styles.table}>
-                <div className={styles.tableHeader}>
-                  <span>ID</span>
-                  <span>Client</span>
-                  <span>Pet</span>
-                  <span>Service</span>
-                  <span>Date</span>
-                  <span>Time</span>
-                  <span>Status</span>
-                  <span>Actions</span>
-                </div>
-
-                {appointments.map((appointment) => (
-                  <div className={styles.tableRow} key={appointment.id}>
-                    <span>#{appointment.id.slice(0, 8)}</span>
-                    <span>{appointment.client_name}</span>
-                    <span>{appointment.pet_name}</span>
-                    <span>{appointment.service_name}</span>
-                    <span>{appointment.appointment_date}</span>
-                    <span>{appointment.appointment_time}</span>
-
-                    <strong
-                      className={`${styles.status} ${getStatusClass(
-                        appointment.status,
-                      )}`}
-                    >
-                      {appointment.status}
-                    </strong>
-
-                    <div className={styles.actions}>
-                      <button type="button">View</button>
-                      <button type="button">Confirm</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+        <article className={shellStyles.statCard}>
+          <p className={shellStyles.statLabel}>Confirmed</p>
+          <div className={shellStyles.statRow}>
+            <h2>{confirmedCount}</h2>
+            <span>Approved</span>
           </div>
+        </article>
 
-          <aside className={styles.sidePanel}>
-            <div className={styles.card}>
-              <p className={styles.eyebrow}>Next appointment</p>
-
-              {nextAppointment ? (
-                <>
-                  <h2>{nextAppointment.service_name}</h2>
-                  <p>
-                    {nextAppointment.pet_name} with{" "}
-                    {nextAppointment.client_name}
-                  </p>
-
-                  <div className={styles.detailList}>
-                    <div>
-                      <span>Date</span>
-                      <strong>{nextAppointment.appointment_date}</strong>
-                    </div>
-
-                    <div>
-                      <span>Time</span>
-                      <strong>{nextAppointment.appointment_time}</strong>
-                    </div>
-
-                    <div>
-                      <span>Status</span>
-                      <strong>{nextAppointment.status}</strong>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <h2>No bookings</h2>
-                  <p>There are no saved appointments yet.</p>
-                </>
-              )}
-            </div>
-
-            <div className={styles.noticeCard}>
-              <h3>Connected to Supabase</h3>
-              <p>
-                Client bookings saved from /client/book will now appear in this
-                admin queue.
-              </p>
-            </div>
-          </aside>
-        </section>
+        <article className={shellStyles.statCard}>
+          <p className={shellStyles.statLabel}>Completed</p>
+          <div className={shellStyles.statRow}>
+            <h2>{completedCount}</h2>
+            <span>Done</span>
+          </div>
+        </article>
       </section>
-    </main>
+
+      <section className={styles.panel}>
+        <div className={styles.panelHeader}>
+          <div>
+            <p className={styles.eyebrow}>Booking records</p>
+            <h2>Client Appointments</h2>
+          </div>
+
+          <span>{appointments.length} records</span>
+        </div>
+
+        {appointments.length === 0 ? (
+          <div className={styles.emptyBox}>
+            <h2>No appointments yet</h2>
+            <p>Client bookings will appear here after they are created.</p>
+          </div>
+        ) : (
+          <div className={styles.table}>
+            <div className={styles.tableHeader}>
+              <span>Client</span>
+              <span>Pet</span>
+              <span>Service</span>
+              <span>Date</span>
+              <span>Time</span>
+              <span>Status</span>
+              <span>Actions</span>
+            </div>
+
+            {appointments.map((appointment) => (
+              <div className={styles.tableRow} key={appointment.id}>
+                <strong>{appointment.client_name}</strong>
+                <span>{appointment.pet_name}</span>
+                <span>{appointment.service_name}</span>
+                <span>{appointment.appointment_date}</span>
+                <span>{appointment.appointment_time}</span>
+
+                <span className={styles.status}>{appointment.status}</span>
+
+                <div className={styles.actions}>
+                  {appointment.status !== "Confirmed" ? (
+                    <button
+                      type="button"
+                      disabled={updatingId === appointment.id}
+                      onClick={() => updateStatus(appointment.id, "Confirmed")}
+                    >
+                      Confirm
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={updatingId === appointment.id}
+                      onClick={() => updateStatus(appointment.id, "Pending")}
+                    >
+                      Undo
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    </AdminLayout>
   );
 }
